@@ -2272,18 +2272,24 @@ RoutingProtocol::sendTRR(Ipv4Address source, Ipv4Address receiver, Ipv4Address t
 	  trrHeader.SetTrrLifetime(Simulator::Now());
 	  trrHeader.SetDstSeqno(150);
 
-
+	  Ipv4InterfaceAddress iface;
 
       // Send RREQ as subnet directed broadcast from each interface used by aodv
         for (std::map<Ptr<Socket>, Ipv4InterfaceAddress>::const_iterator j =
                m_socketAddresses.begin (); j != m_socketAddresses.end (); ++j)
           {
             Ptr<Socket> socket = j->first;
+            iface = j->second;
 
             Ptr<Packet> packet = Create<Packet> ();
 			      packet->AddHeader (trrHeader);
 			      /*TypeHeader tHeader (TRUSTTYPE_TRR);
 			      packet->AddHeader (tHeader);*/
+
+			      //newly added
+			      TypeHeader tHeader (TRUSTTYPE_TRR);
+			      packet->AddHeader (tHeader);
+			      socket->SendTo (packet, 0, InetSocketAddress (iface.GetBroadcast(), TRUST_PORT));
 
 			// Send to all-hosts broadcast if on /32 addr, subnet-directed otherwise
 			Ipv4Address destination;
@@ -2373,6 +2379,7 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
 
   for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
    {
+	  std::cout << "it Des "<<it->getDestinationNode()<<" trr des "<< trrHeader.GetDst()<<std::endl;
  	  if(it->getDestinationNode() == trrHeader.GetDst())
  	  {
  		double val = it->getDirectTrust();
