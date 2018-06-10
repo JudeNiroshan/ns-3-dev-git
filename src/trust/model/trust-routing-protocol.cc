@@ -2343,6 +2343,7 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
   if (IsMyOwnAddress (trrHeader.GetOrigin()))
   {
 	  std::cout << "TRR BACK TO HOME!!! "<< std::endl;
+	  std::cout << trrHeader.GetTrrLifetime() << std::endl;
 //	  rec = sendTRR(node, targetNode);
 	  Time time = trrHeader.GetTrrLifetime();
 	  Time currentTime = Simulator::Now();
@@ -2354,7 +2355,7 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
 		  entry.setDirectTrust(trrHeader.GetDT());
 		  entry.setGlobalTrust(trrHeader.GetGT());
 		  entry.setTargetNodeId(trrHeader.GetTarget());
-		  std::cout << "adding the trr table entry "<< std::endl;
+		  std::cout << "adding the TRR table entry "<< std::endl;
 		  m_TRRTable.addTrrTableEntry(entry);
 		  m_TRRTable.printTable();
 	  }
