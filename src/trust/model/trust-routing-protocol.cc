@@ -2344,13 +2344,11 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
   if (IsMyOwnAddress (trrHeader.GetOrigin()))
   {
 	  std::cout << "TRR BACK TO HOME!!! "<< std::endl;
-//	  rec = sendTRR(node, targetNode);
+	  rec = sendTRR(node, targetNode);
 	  Time time (MilliSeconds (trrHeader.GetTrrLifetime()));
 	  Time currentTime = Simulator::Now();
-	  std::cout << "(currentTime - time) ::: "<< (currentTime - time) <<std::endl;
-	  std::cout << "Time(1500).GetMilliSeconds() ::: "<< Time(1500).GetMilliSeconds() <<std::endl;
 
-	  if((currentTime - time) < Time(1500).GetMilliSeconds()){
+	  if((currentTime - time).GetSeconds() < Time(15e10).GetSeconds()){
 		  TRRTableEntry entry;
 		  entry.setSentTime(time);
 		  entry.setReceivedTime(currentTime);
