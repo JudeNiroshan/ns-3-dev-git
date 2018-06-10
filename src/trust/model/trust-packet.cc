@@ -740,15 +740,16 @@ TRRHeader::Deserialize (Buffer::Iterator start)
 {
   Buffer::Iterator i = start;
   m_GT = i.ReadU32();
+  std::cout<<"JUDE ADDED::: Deserialized m_GT = " <<m_GT<<std::endl;
   ReadFrom (i, m_dst);
   m_DT = i.ReadU32();
+  std::cout<<"JUDE ADDED::: Deserialized m_DT = " <<m_DT<<std::endl;
   m_trrID = i.ReadU32 ();
   m_dstSeqNo = i.ReadU32 ();
   ReadFrom (i, m_origin);
   m_originSeqNo = i.ReadU32 ();
 
   uint32_t dist = i.GetDistanceFrom (start);
-  Print(std::cout); //Printing out the entire TRR header
   NS_ASSERT (dist == GetSerializedSize ());
   return dist;
 }

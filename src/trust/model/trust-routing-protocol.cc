@@ -2399,10 +2399,10 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
    Ptr<Packet> packetReply = Create<Packet> ();
 //   trrHeader.SetDstSeqno(152);
    packetReply->AddHeader (trrHeader);
-/*
-   TypeHeader tHeader (AODVTYPE_TRR);
+
+   TypeHeader tHeader (TRUSTTYPE_TRR);
    packetReply->AddHeader (tHeader);
-*/
+
 
    if(status)
    {
