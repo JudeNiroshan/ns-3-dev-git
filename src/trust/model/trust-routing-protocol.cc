@@ -413,26 +413,25 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
       NS_ASSERT (route != 0);
       NS_LOG_DEBUG ("Exist route to " << route->GetDestination () << " from interface " << route->GetSource ());
       if (oif != 0 && route->GetOutputDevice () != oif)
-        {
-          NS_LOG_DEBUG ("Output device doesn't match. Dropped.");
-          sockerr = Socket::ERROR_NOROUTETOHOST;
-          return Ptr<Ipv4Route> ();
-        }
+      {
+        NS_LOG_DEBUG ("Output device doesn't match. Dropped.");
+        sockerr = Socket::ERROR_NOROUTETOHOST;
+        return Ptr<Ipv4Route> ();
+      }
 
       UpdateRouteLifeTime (dst, m_activeRouteTimeout);
       UpdateRouteLifeTime (route->GetGateway (), m_activeRouteTimeout);
 
-            for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
-             {
-           	  if(it->getDestinationNode() == dst)
-           	  {
-           	  it->incNDF();
-           	  }
-             }
+      for (std::vector<TrustTableEntry>::iterator it = m_trustTable.getTrustTableEntries().begin(); it != m_trustTable.getTrustTableEntries().end(); it++)
+      {
+        if(it->getDestinationNode() == dst)
+        {
+          it->incNDF();
+        }
+      }
 
-      //direct trust calculation
-         	DirTrustCal dirCalculator;
-          dirCalculator.calculateDirectTrust(&m_trustTable);
+      DirTrustCal dirCalculator;
+      dirCalculator.calculateDirectTrust(&m_trustTable);
 
       /*
        //indirect trust calculation
@@ -2266,7 +2265,9 @@ RoutingProtocol::sendTRR(Ipv4Address source, Ipv4Address receiver, Ipv4Address t
 	  trrHeader.SetDst (receiver);
 	  trrHeader.SetOrigin (source);
 	  trrHeader.SetTarget(targetNode);
-	  trrHeader.SetTrrLifetime(Simulator::Now());
+	  std::cout<<"JUDE ADDED::: TrrLifeTime = " << Simulator::Now() <<std::endl;
+	  uint32_t trrLifeTime = uint32_t (Simulator::Now().GetMilliSeconds());
+	  trrHeader.SetTrrLifetime(trrLifeTime);
 	  trrHeader.SetDstSeqno(150);
 
 	  Ipv4InterfaceAddress iface;
@@ -2338,23 +2339,22 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
   RoutingTableEntry rt;
   TRRHeader trrHeader(TRUSTTYPE_TRR);
   packet->RemoveHeader(trrHeader);
-  trrHeader.Print(std::cout);
 
   if (IsMyOwnAddress (trrHeader.GetOrigin()))
   {
 	  std::cout << "TRR BACK TO HOME!!! "<< std::endl;
-//	  rec = sendTRR(node, targetNode);
-	  Time time = trrHeader.GetTrrLifetime();
+	  rec = sendTRR(node, targetNode);
+	  Time time (MilliSeconds (trrHeader.GetTrrLifetime()));
 	  Time currentTime = Simulator::Now();
 
-	  if((currentTime - time) < Time(1500).GetMilliSeconds()){
+	  if((currentTime - time).GetSeconds() < Time(15e10).GetSeconds()){
 		  TRRTableEntry entry;
-		  entry.setSentTime(trrHeader.GetTrrLifetime());
+		  entry.setSentTime(time);
 		  entry.setReceivedTime(currentTime);
-		  entry.setDirectTrust(trrHeader.GetDT());
-		  entry.setGlobalTrust(trrHeader.GetGT());
+		  entry.setDirectTrust((int)(trrHeader.GetDT()) / 100000.0);
+		  entry.setGlobalTrust((int)(trrHeader.GetGT()) / 100000.0);
 		  entry.setTargetNodeId(trrHeader.GetTarget());
-		  std::cout << "adding the trr table entry "<< std::endl;
+		  std::cout << "adding the TRR table entry "<< std::endl;
 		  m_TRRTable.addTrrTableEntry(entry);
 		  m_TRRTable.printTable();
 	  }
@@ -2368,29 +2368,30 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
    {
  	  if(it->getDestinationNode() == trrHeader.GetDst())
  	  {
- 		double val = it->getDirectTrust();
- 		std::ostringstream strs;
- 		strs << val;
- 		std::string str = strs.str();
- 		std::string decimalStr = str.substr(0, str.find("."));
- 		std::string floatStr = str.substr(str.find(".") + 1);
+ 		// fill direct trust into trrHeader
+ 		double directTrustValue = it->getDirectTrust();  // For example: 0.123456
+ 		directTrustValue = directTrustValue * 100000;  // 12345.6
+
+ 		std::ostringstream dtStringStream;
+ 		dtStringStream << directTrustValue;
+ 		std::string dtString = dtStringStream.str();
+ 		std::string decimalStr = dtString.substr(0, dtString.find("."));
+ 		std::string floatStr = dtString.substr(0, dtString.find("."));  // 12345
  		uint32_t flt = atoi(floatStr.c_str());
-
- 		Ipv4Address dt;
- 		dt.Set(flt);
  		trrHeader.setDT(flt);
- 		trrHeader.SetDstSeqno(flt); // yes, this is for testing purposes; setting the direct trust value as seq no
- 		double val_GT = it->getGlobalTrust();
- 		std::ostringstream strs2;
- 		strs2 << val_GT;
- 		std::string str2 = strs2.str();
- 		std::string decimalStr2 = str2.substr(0, str2.find("."));
- 		std::string floatStr2 = str2.substr(str2.find(".") + 1);
- 		uint32_t flt2 = atoi(floatStr2.c_str());
 
- 		Ipv4Address gt;
- 		gt.Set(flt2);
+ 		// fill global trust into trrHeader
+ 		double globalTrustValue = it->getGlobalTrust();
+ 		globalTrustValue = globalTrustValue * 100000;
+
+ 		std::ostringstream gtStringStream;
+ 		gtStringStream << globalTrustValue;
+ 		std::string gtString = gtStringStream.str();
+ 		std::string decimalStr2 = gtString.substr(0, gtString.find("."));
+ 		std::string floatStr2 = gtString.substr(0, gtString.find("."));
+ 		uint32_t flt2 = atoi(floatStr2.c_str());
  		trrHeader.setGT(flt2);
+
  		status = true;
  		break;
  	  }
