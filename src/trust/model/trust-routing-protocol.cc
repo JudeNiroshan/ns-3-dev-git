@@ -2339,7 +2339,6 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
   RoutingTableEntry rt;
   TRRHeader trrHeader(TRUSTTYPE_TRR);
   packet->RemoveHeader(trrHeader);
-  trrHeader.Print(std::cout);
 
   if (IsMyOwnAddress (trrHeader.GetOrigin()))
   {
@@ -2354,8 +2353,8 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
 		  TRRTableEntry entry;
 		  entry.setSentTime(time);
 		  entry.setReceivedTime(currentTime);
-		  entry.setDirectTrust(trrHeader.GetDT());
-		  entry.setGlobalTrust(trrHeader.GetGT());
+		  entry.setDirectTrust((int)(trrHeader.GetDT()) / 100000.0);
+		  entry.setGlobalTrust((int)(trrHeader.GetGT()) / 100000.0);
 		  entry.setTargetNodeId(trrHeader.GetTarget());
 		  std::cout << "adding the trr table entry "<< std::endl;
 		  m_TRRTable.addTrrTableEntry(entry);

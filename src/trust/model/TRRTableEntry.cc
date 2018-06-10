@@ -31,20 +31,20 @@ void TRRTableEntry::setSenderNodeId(Ipv4Address senderNodeId)
 	this->senderNodeId = senderNodeId;
 }
 
-uint32_t TRRTableEntry::getDirectTrust()
+double TRRTableEntry::getDirectTrust()
 {
 	return directTrust;
 }
-void TRRTableEntry::setDirectTrust(uint32_t directTrust)
+void TRRTableEntry::setDirectTrust(double directTrust)
 {
 	this->directTrust = directTrust;
 }
 
-uint32_t TRRTableEntry::getGlobalTrust()
+double TRRTableEntry::getGlobalTrust()
 {
 	return globalTrust;
 }
-void TRRTableEntry::setGlobalTrust(uint32_t globalTrust)
+void TRRTableEntry::setGlobalTrust(double globalTrust)
 {
 	this->globalTrust = globalTrust;
 }
