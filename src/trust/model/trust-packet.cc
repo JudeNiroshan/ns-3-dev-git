@@ -720,7 +720,7 @@ TRRHeader::GetInstanceTypeId () const
 uint32_t
 TRRHeader::GetSerializedSize () const
 {
-  return 28;
+  return 32;
 }
 
 void
@@ -733,6 +733,7 @@ TRRHeader::Serialize (Buffer::Iterator i) const
   i.WriteU32 (m_dstSeqNo);
   WriteTo (i, m_origin);
   i.WriteU32 (m_originSeqNo);
+  i.WriteHtonU32(m_trrLifetime);
 }
 
 uint32_t
@@ -748,6 +749,8 @@ TRRHeader::Deserialize (Buffer::Iterator start)
   m_dstSeqNo = i.ReadU32 ();
   ReadFrom (i, m_origin);
   m_originSeqNo = i.ReadU32 ();
+  m_trrLifetime = i.ReadNtohU32 ();
+  std::cout<<"JUDE ADDED::: Deserialized trrLifetime = " <<m_trrLifetime<<std::endl;
 
   uint32_t dist = i.GetDistanceFrom (start);
   NS_ASSERT (dist == GetSerializedSize ());

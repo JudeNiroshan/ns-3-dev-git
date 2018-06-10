@@ -664,8 +664,8 @@ public:
   Ipv4Address GetOrigin () const { return m_origin; }
   void SetOriginSeqno (uint32_t s) { m_originSeqNo = s; }
   uint32_t GetOriginSeqno () const { return m_originSeqNo; }
-  void SetTrrLifetime (Time t) { m_trrLifetime = t; }
-  Time GetTrrLifetime () const { return m_trrLifetime; }
+  void SetTrrLifetime (uint32_t t) { m_trrLifetime = t; }
+  uint32_t GetTrrLifetime () const { return m_trrLifetime; }
   //\}
 
   ///\name Flags
@@ -688,7 +688,7 @@ private:
   Ipv4Address    m_origin;         ///< Originator IP Address
   Ipv4Address    m_target;         ///< Target IP Address
   uint32_t       m_originSeqNo;    ///< Source Sequence Number
-  Time		 m_trrLifetime;        ///< time limit to discard the packet
+  uint32_t		 m_trrLifetime;        ///< time limit to discard the packet
 };
 
 std::ostream & operator<< (std::ostream & os, TRRHeader const &);
