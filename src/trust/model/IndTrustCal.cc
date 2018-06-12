@@ -143,6 +143,7 @@ double* IndTrustCal::getDTGT(TrustTableEntry node, TrustTableEntry targetNode) {
  * Parameter: node
  */
 double IndTrustCal::calculateMaturityLevel(TrustTableEntry node) {
+
 	int i_p_node = node.getInteractionCount();
 	std::vector<TrustTableEntry> node_entry_list =
 			this->trustTable->getTrustTableEntries();
@@ -161,9 +162,10 @@ double IndTrustCal::calculateMaturityLevel(TrustTableEntry node) {
  * Parameter: targetNode
  */
 double IndTrustCal::calculateIndirectTrust(TrustTableEntry targetNode) {
-	std::vector<TrustTableEntry> node_entry_list =
-			this->trustTable->getTrustTableEntries();
+
+	std::vector<TrustTableEntry> node_entry_list = this->trustTable->getTrustTableEntries();
 	double w_sum = 0;
+
 	for (std::vector<TrustTableEntry>::iterator it = node_entry_list.begin();
 			it != node_entry_list.end(); it++) {
 		if (it->getDestinationNode() != targetNode.getDestinationNode()) {

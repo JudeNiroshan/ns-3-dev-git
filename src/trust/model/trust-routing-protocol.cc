@@ -433,7 +433,7 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
       DirTrustCal dirCalculator;
       dirCalculator.calculateDirectTrust(&m_trustTable);
 
-      /*
+
        //indirect trust calculation
       	IndTrustCal indTrustCal;
       	indTrustCal.setTrustTable(&m_trustTable);
@@ -445,7 +445,7 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
       		it->updateIndirectTrust(ind_trust_value);
       		it->calculateGlobalTrust();
       		//TODO: inside above calculateGlobalTrust() need to update backupTable.
-      	}*/
+      	}
 
 
       return route;
@@ -2346,8 +2346,10 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
 //	  rec = sendTRR(node, targetNode);
 	  Time time (MilliSeconds (trrHeader.GetTrrLifetime()));
 	  Time currentTime = Simulator::Now();
+	  double originalGT =(trrHeader.GetGT()) / 100000.0;
 
-	  if((currentTime - time).GetSeconds() < Time(15e10).GetSeconds()){
+	  if((currentTime - time).GetSeconds() < Time(15e9).GetSeconds()){
+
 		  TRRTableEntry entry;
 		  entry.setSentTime(time);
 		  entry.setReceivedTime(currentTime);
@@ -2357,6 +2359,14 @@ RoutingProtocol::RecvTrr (Ipv4Address sender, Ptr<Packet> packet )
 		  std::cout << "adding the TRR table entry "<< std::endl;
 		  m_TRRTable.addTrrTableEntry(entry);
 		  m_TRRTable.printTable();
+
+		  RecommendationTableEntry recTableEntry;
+		  recTableEntry.setNeighborNodeId(sender);
+		  recTableEntry.setRecValue(originalGT);
+		  m_recommendationTable.addRecommendationTableEntry(recTableEntry);
+		  std::cout << "    "<< std::endl;
+		  std::cout << "##############Printing Recommendation table#############3"<< std::endl;
+		  m_recommendationTable.printTable();
 	  }
 
     return;
