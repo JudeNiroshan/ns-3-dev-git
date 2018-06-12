@@ -447,6 +447,11 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
       		//TODO: inside above calculateGlobalTrust() need to update backupTable.
       	}
 
+      	//Trust levels classification
+      	TrustLevelClassifier trustLevelClassifier;
+      	trustLevelClassifier.identifyTrustLevel(&m_trustTable);
+
+
 
       return route;
     }
