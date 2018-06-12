@@ -441,7 +441,7 @@ RoutingProtocol::RouteOutput (Ptr<Packet> p, const Ipv4Header &header,
 
       	for (std::vector<TrustTableEntry>::iterator it = node_entry_vector.begin(); it != node_entry_vector.end(); it++)
       	{
-      		double ind_trust_value = indTrustCal.calculateIndirectTrust(*it);
+      		double ind_trust_value = indTrustCal.calculateIndirectTrust(*it,m_recommendationTable);
       		it->updateIndirectTrust(ind_trust_value);
       		it->calculateGlobalTrust();
       		//TODO: inside above calculateGlobalTrust() need to update backupTable.

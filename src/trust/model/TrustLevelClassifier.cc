@@ -50,9 +50,9 @@ void TrustLevelClassifier::identifyTrustLevel(TrustTable* trustTable)
 			}
 			else
 			{
-				//call spiral model method
+				//----call spiral model here-----
 				it->setTrustLevel(-1);
-				Spiral model;
+				Spiral spriralModel;
 //				double *past_global_trust_range;
 //				past_global_trust_range = model.getMinMaxTrust(trustTable);
 //				std::cout << "Max GT:- " << past_global_trust_range[1] << std::endl;

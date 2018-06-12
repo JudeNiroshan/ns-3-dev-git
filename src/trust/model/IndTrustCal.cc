@@ -73,11 +73,21 @@ IndTrustCal::IndTrustCal() {
  * Returns:   rec
  * Parameter: node, targetNode
  */
-double* IndTrustCal::sendTRR(TrustTableEntry node, TrustTableEntry targetNode) {
+double* IndTrustCal::sendTRR(TrustTableEntry node, TrustTableEntry targetNode, RecommendationTable recommendationTable) {
 	//TODO : Need to send a packet to targetNode to get the DT and GT
 	static double rec[2];
 	rec[0] = 0.5;
 	rec[1] = 0.6;
+
+	std::vector<RecommendationTableEntry> node_entry_list = recommendationTable.getRecommendedNodeEntries(node.getDestinationNode());
+
+	for (std::vector<TrustTableEntry>::iterator it = node_entry_list.begin();it != node_entry_list.end(); it++) {
+		if (it->getDestinationNode() != targetNode.getDestinationNode()) {
+			//to be completed
+
+		}
+	}
+
 	return rec;
 }
 
@@ -95,8 +105,8 @@ void IndTrustCal::setTrustTable(TrustTable* trustTable) {
  * Returns:   weight
  * Parameter: node, targetNode
  */
-double IndTrustCal::calculateWeight(TrustTableEntry node,
-		TrustTableEntry targetNode) {
+double IndTrustCal::calculateWeight(TrustTableEntry node, TrustTableEntry targetNode) {
+
 	double r_new_nei_node = calculateRNew(node, targetNode);
 	double r_new_all = 0;
 	std::vector<TrustTableEntry> node_entry_list =
@@ -108,6 +118,7 @@ double IndTrustCal::calculateWeight(TrustTableEntry node,
 			r_new_all = r_new_all + r_new_node;
 		}
 	}
+
 	return r_new_nei_node / r_new_all;
 }
 
@@ -116,8 +127,8 @@ double IndTrustCal::calculateWeight(TrustTableEntry node,
  * Returns:   new Recommendation
  * Parameter: node, targetNode
  */
-double IndTrustCal::calculateRNew(TrustTableEntry node,
-		TrustTableEntry targetNode) {
+double IndTrustCal::calculateRNew(TrustTableEntry node, TrustTableEntry targetNode) {
+
 	double mlevel = calculateMaturityLevel(node);
 	double* rec;
 	rec = getDTGT(node, targetNode);
@@ -130,9 +141,10 @@ double IndTrustCal::calculateRNew(TrustTableEntry node,
  * Returns:   rec
  * Parameter: node, targetNode
  */
-double* IndTrustCal::getDTGT(TrustTableEntry node, TrustTableEntry targetNode) {
+double* IndTrustCal::getDTGT(TrustTableEntry node, TrustTableEntry targetNode, RecommendationTable recommendationTable)) {
+
 	double* rec;
-	rec = sendTRR(node, targetNode);
+	rec = sendTRR(node, targetNode, recommendationTable);
 
 	return rec;
 }
@@ -161,18 +173,17 @@ double IndTrustCal::calculateMaturityLevel(TrustTableEntry node) {
  * Returns:   w_sum
  * Parameter: targetNode
  */
-double IndTrustCal::calculateIndirectTrust(TrustTableEntry targetNode) {
+double IndTrustCal::calculateIndirectTrust(TrustTableEntry targetNode, RecommendationTable recommendationTable) {
 
 	std::vector<TrustTableEntry> node_entry_list = this->trustTable->getTrustTableEntries();
 	double w_sum = 0;
 
-	for (std::vector<TrustTableEntry>::iterator it = node_entry_list.begin();
-			it != node_entry_list.end(); it++) {
+	for (std::vector<TrustTableEntry>::iterator it = node_entry_list.begin();it != node_entry_list.end(); it++) {
 		if (it->getDestinationNode() != targetNode.getDestinationNode()) {
 			double w = calculateWeight(*it, targetNode);
 			double r_new_nei_node = calculateRNew(*it, targetNode);
 			double *rec;
-			rec = getDTGT(*it, targetNode);
+			rec = getDTGT(*it, targetNode, recommendationTable);
 			double cal_w_term = w * (r_new_nei_node * rec[1]);
 			w_sum = w_sum + cal_w_term;
 		}
