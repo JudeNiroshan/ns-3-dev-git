@@ -109,6 +109,10 @@ WifiPhy::ChannelToFrequencyWidthMap WifiPhy::m_channelToFrequencyWidth =
   { std::make_pair (157, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5785, 20) },
   { std::make_pair (161, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5805, 20) },
   { std::make_pair (165, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5825, 20) },
+  { std::make_pair (169, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5845, 20) },
+  { std::make_pair (173, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5865, 20) },
+  { std::make_pair (177, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5885, 20) },
+  { std::make_pair (181, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5905, 20) },
   // 40 MHz channels
   { std::make_pair (38, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5190, 40) },
   { std::make_pair (46, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5230, 40) },
@@ -122,6 +126,8 @@ WifiPhy::ChannelToFrequencyWidthMap WifiPhy::m_channelToFrequencyWidth =
   { std::make_pair (142, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5710, 40) },
   { std::make_pair (151, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5755, 40) },
   { std::make_pair (159, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5795, 40) },
+  { std::make_pair (167, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5835, 40) },
+  { std::make_pair (175, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5875, 40) },
   // 80 MHz channels
   { std::make_pair (42, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5210, 80) },
   { std::make_pair (58, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5290, 80) },
@@ -129,9 +135,11 @@ WifiPhy::ChannelToFrequencyWidthMap WifiPhy::m_channelToFrequencyWidth =
   { std::make_pair (122, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5610, 80) },
   { std::make_pair (138, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5690, 80) },
   { std::make_pair (155, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5775, 80) },
+  { std::make_pair (171, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5855, 80) },
   // 160 MHz channels
   { std::make_pair (50, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5250, 160) },
   { std::make_pair (114, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5570, 160) },
+  { std::make_pair (163, WIFI_PHY_STANDARD_UNSPECIFIED), std::make_pair (5815, 160) },
 
   // 802.11p (10 MHz channels at the 5.855-5.925 band
   { std::make_pair (172, WIFI_PHY_STANDARD_80211_10MHZ), std::make_pair (5860, 10) },
@@ -898,7 +906,7 @@ WifiPhy::ConfigureHtDeviceMcsSet (void)
   if (htFound)
     {
       // erase all HtMcs modes from deviceMcsSet
-      size_t index = m_deviceMcsSet.size () - 1;
+      std::size_t index = m_deviceMcsSet.size () - 1;
       for (std::vector<WifiMode>::reverse_iterator rit = m_deviceMcsSet.rbegin (); rit != m_deviceMcsSet.rend (); ++rit, --index)
         {
           if (m_deviceMcsSet[index].GetModulationClass () == WIFI_MOD_CLASS_HT)
@@ -1030,9 +1038,9 @@ WifiPhy::DefineChannelNumber (uint8_t channelNumber, WifiPhyStandard standard, u
 }
 
 uint8_t
-WifiPhy::FindChannelNumberForFrequencyWidth (uint16_t frequency, uint8_t width) const
+WifiPhy::FindChannelNumberForFrequencyWidth (uint16_t frequency, uint16_t width) const
 {
-  NS_LOG_FUNCTION (this << frequency << +width);
+  NS_LOG_FUNCTION (this << frequency << width);
   bool found = false;
   FrequencyWidthPair f = std::make_pair (frequency, width);
   ChannelToFrequencyWidthMap::const_iterator it = m_channelToFrequencyWidth.begin ();
@@ -1311,7 +1319,7 @@ WifiPhy::GetMaxSupportedRxSpatialStreams (void) const
 uint8_t
 WifiPhy::GetNBssMembershipSelectors (void) const
 {
-  return m_bssMembershipSelectorSet.size ();
+  return static_cast<uint8_t> (m_bssMembershipSelectorSet.size ());
 }
 
 uint8_t
@@ -1399,7 +1407,7 @@ WifiPhy::SetChannelNumber (uint8_t nch)
     }
   else
     {
-      NS_FATAL_ERROR ("Frequency not found for channel number " << nch);
+      NS_FATAL_ERROR ("Frequency not found for channel number " << +nch);
     }
 }
 
@@ -2157,11 +2165,11 @@ WifiPhy::GetPayloadDuration (uint32_t size, WifiTxVector txVector, uint16_t freq
         //Add signal extension for ERP PHY
         if (payloadMode.GetModulationClass () == WIFI_MOD_CLASS_ERP_OFDM)
           {
-            return FemtoSeconds (numSymbols * symbolDuration.GetFemtoSeconds ()) + MicroSeconds (6);
+            return FemtoSeconds (static_cast<uint64_t> (numSymbols * symbolDuration.GetFemtoSeconds ())) + MicroSeconds (6);
           }
         else
           {
-            return FemtoSeconds (numSymbols * symbolDuration.GetFemtoSeconds ());
+            return FemtoSeconds (static_cast<uint64_t> (numSymbols * symbolDuration.GetFemtoSeconds ()));
           }
       }
     case WIFI_MOD_CLASS_HT:
@@ -2171,11 +2179,11 @@ WifiPhy::GetPayloadDuration (uint32_t size, WifiTxVector txVector, uint16_t freq
             && ((mpdutype == NORMAL_MPDU && preamble != WIFI_PREAMBLE_NONE)
                 || (mpdutype == LAST_MPDU_IN_AGGREGATE && preamble == WIFI_PREAMBLE_NONE))) //at 2.4 GHz
           {
-            return FemtoSeconds (numSymbols * symbolDuration.GetFemtoSeconds ()) + MicroSeconds (6);
+            return FemtoSeconds (static_cast<uint64_t> (numSymbols * symbolDuration.GetFemtoSeconds ())) + MicroSeconds (6);
           }
         else //at 5 GHz
           {
-            return FemtoSeconds (numSymbols * symbolDuration.GetFemtoSeconds ());
+            return FemtoSeconds (static_cast<uint64_t> (numSymbols * symbolDuration.GetFemtoSeconds ()));
           }
       }
     case WIFI_MOD_CLASS_HE:
@@ -2184,11 +2192,11 @@ WifiPhy::GetPayloadDuration (uint32_t size, WifiTxVector txVector, uint16_t freq
             && ((mpdutype == NORMAL_MPDU && preamble != WIFI_PREAMBLE_NONE)
                 || (mpdutype == LAST_MPDU_IN_AGGREGATE && preamble == WIFI_PREAMBLE_NONE))) //at 2.4 GHz
           {
-            return FemtoSeconds (numSymbols * symbolDuration.GetFemtoSeconds ()) + MicroSeconds (6);
+            return FemtoSeconds (static_cast<uint64_t> (numSymbols * symbolDuration.GetFemtoSeconds ())) + MicroSeconds (6);
           }
         else //at 5 GHz
           {
-            return FemtoSeconds (numSymbols * symbolDuration.GetFemtoSeconds ());
+            return FemtoSeconds (static_cast<uint64_t> (numSymbols * symbolDuration.GetFemtoSeconds ()));
           }
       }
     case WIFI_MOD_CLASS_DSSS:
@@ -2285,7 +2293,7 @@ WifiPhy::SendPacket (Ptr<const Packet> packet, WifiTxVector txVector, MpduType m
                         << +txVector.GetTxPowerLevel ()
                         << +mpdutype);
   /* Transmission can happen if:
-   *  - we are syncing on a packet. It is the responsability of the
+   *  - we are syncing on a packet. It is the responsibility of the
    *    MAC layer to avoid doing this but the PHY does nothing to
    *    prevent it.
    *  - we are idle
@@ -3494,7 +3502,7 @@ WifiPhy::IsMcsSupported (WifiMode mcs) const
 uint8_t
 WifiPhy::GetNModes (void) const
 {
-  return m_deviceRateSet.size ();
+  return static_cast<uint8_t> (m_deviceRateSet.size ());
 }
 
 WifiMode
@@ -3506,7 +3514,7 @@ WifiPhy::GetMode (uint8_t mode) const
 uint8_t
 WifiPhy::GetNMcs (void) const
 {
-  return m_deviceMcsSet.size ();
+  return static_cast<uint8_t> (m_deviceMcsSet.size ());
 }
 
 WifiMode

@@ -56,6 +56,13 @@ public:
   void SetForwardCallback (ForwardUpCallback callback);
 
   /**
+   * Set a callback to trigger the next PCF frame.
+   *
+   * \param callback
+   */
+  void SetPcfCallback (Callback<void> callback);
+
+  /**
    * Receive a packet.
    *
    * \param packet the packet
@@ -115,17 +122,19 @@ private:
    */
   typedef std::map <std::pair<Mac48Address, uint8_t>, OriginatorRxStatus *, std::less<std::pair<Mac48Address,uint8_t> > > QosOriginators;
   /**
-   * typedef for an interator for Originators
+   * typedef for an iterator for Originators
    */
   typedef std::map <Mac48Address, OriginatorRxStatus *, std::less<Mac48Address> >::iterator OriginatorsI;
   /**
-   * typedef for an interator for QosOriginators
+   * typedef for an iterator for QosOriginators
    */
   typedef std::map <std::pair<Mac48Address, uint8_t>, OriginatorRxStatus *, std::less<std::pair<Mac48Address,uint8_t> > >::iterator QosOriginatorsI;
 
   Originators m_originatorStatus; ///< originator status
   QosOriginators m_qosOriginatorStatus; ///< QOS originator status
   ForwardUpCallback m_callback; ///< forward up callback
+
+  Callback<void> m_pcfCallback; //!< PCF callback
 };
 
 } //namespace ns3

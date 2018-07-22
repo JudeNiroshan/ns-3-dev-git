@@ -175,7 +175,7 @@ public:
   /**
    * Get a type id by index.
    *
-   * The type id value 0 indicates not registerd, so there is an offset
+   * The type id value 0 indicates not registered, so there is an offset
    * of 1 between the index and the type id value.  This function converts
    * from an index to the type id value.
    * \param [in] i The index.
@@ -448,7 +448,7 @@ IidManager::AllocateUid (std::string name)
   m_namemap.insert (std::make_pair (name, uid));
   m_hashmap.insert (std::make_pair (hash, uid));
   NS_LOG_LOGIC (IIDL << uid);
-  return static_cast<uint16_t> (uid);
+  return uid;
 }
 
 struct IidManager::IidInformation *

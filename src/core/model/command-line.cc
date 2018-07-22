@@ -257,7 +257,7 @@ CommandLine::PrintHelp (std::ostream &os) const
     {
       width = std::max (width, it->m_name.size ());
     }
-  width += 3;  // room for ":  " betwen option and help
+  width += 3;  // room for ":  " between option and help
 
   if (!m_options.empty ())
     {
@@ -555,7 +555,7 @@ CommandLine::AddValue (const std::string &name,
 {
   NS_LOG_FUNCTION (this << name << attributePath);
   // Attribute name is last token
-  size_t colon = attributePath.rfind ("::");
+  std::size_t colon = attributePath.rfind ("::");
   const std::string typeName = attributePath.substr (0, colon);
   NS_LOG_DEBUG ("typeName: '" << typeName << "', colon: " << colon);
   
