@@ -91,9 +91,11 @@ public:
    * \brief add a new trust table entry or update the existing
    * trust table entry for the given Address
    * \param dst Address instance of target node
-   * \param trustValue trust value
+   * \param trustValue trust value (negative trust
+   *   values will not be added to the trust table)
+   * \return true on success
    */
-  void AddOrUpdateTrustTableEntry (Address dst,
+  bool AddOrUpdateTrustTableEntry (Address dst,
                                    double trustValue);
 };
 
