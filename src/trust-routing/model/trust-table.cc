@@ -19,7 +19,6 @@
  */
 
 #include "trust-table.h"
-
 #include "ns3/simulator.h"
 
 namespace ns3 {
@@ -85,25 +84,25 @@ bool TrustTable::LookupTrustEntry (Address dst,
   return true;
 }
 
-void TrustTable::AddOrUpdateTrustTableEntry (Address dst,
+bool TrustTable::AddOrUpdateTrustTableEntry (Address dst,
                                              double trustValue)
 {
+  if (trustValue < 0)
+    {
+      return false;
+    }
+
   std::map<Address, TrustEntry>::const_iterator i = m_tableRecords.find (dst);
 
   if (i == m_tableRecords.end ())
     {
-      TrustEntry newTrustEntry;
-      newTrustEntry.SetAddress (dst);
-      newTrustEntry.SetTrustValue (trustValue);
-      newTrustEntry.SetTimestamp (Simulator::Now ());
-      m_tableRecords[dst] = newTrustEntry;
+      return AddRecord (dst,
+                        trustValue);
     }
   else
     {
-      TrustEntry trustEntry = i->second;
-      trustEntry.SetTrustValue (trustValue);
-      trustEntry.SetTimestamp (Simulator::Now ());
-      m_tableRecords[dst] = trustEntry;
+      return UpdateRecord (dst,
+                           trustValue);
     }
 }
 

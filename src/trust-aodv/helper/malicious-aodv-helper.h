@@ -54,6 +54,7 @@ public:
    * \todo support installing AODV on the subset of all available IP interfaces
    */
   virtual Ptr<Ipv4RoutingProtocol> Create (Ptr<Node> node) const;
+
   /**
    * \param name the name of the attribute to set
    * \param value the value of the attribute to set.
@@ -61,6 +62,7 @@ public:
    * This method controls the attributes of ns3::aodv::RoutingProtocol
    */
   void Set (std::string name, const AttributeValue &value);
+
   /**
    * Assign a fixed random variable stream number to the random variables
    * used by this model.  Return the number of streams (possibly zero) that
