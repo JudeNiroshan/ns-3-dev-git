@@ -31,7 +31,7 @@ bool TrustTable::AddRecord (Address address,
                             double trustValue)
 {
   TrustEntry newTrustEntry;
-  newTrustEntry.SetNeighbourAddress (address);
+  newTrustEntry.SetAddress (address);
   newTrustEntry.SetTrustValue (trustValue);
   newTrustEntry.SetTimestamp (Simulator::Now ());
   std::pair<std::map<Address, TrustEntry>::iterator, bool> result = m_tableRecords.insert (std::make_pair (address,
@@ -57,7 +57,7 @@ bool TrustTable::UpdateRecord (Address address,
       return false;
     }
   TrustEntry newTrustEntry;
-  newTrustEntry.SetNeighbourAddress (address);
+  newTrustEntry.SetAddress (address);
   newTrustEntry.SetTrustValue (trustValue);
   newTrustEntry.SetTimestamp (Simulator::Now ());
 
@@ -92,7 +92,7 @@ void TrustTable::AddOrUpdateTrustTableEntry (Address dst,
   if (i == m_tableRecords.end ())
     {
       TrustEntry newTrustEntry;
-      newTrustEntry.SetNeighbourAddress (dst);
+      newTrustEntry.SetAddress (dst);
       newTrustEntry.SetTrustValue (trustValue);
       newTrustEntry.SetTimestamp (Simulator::Now ());
       m_tableRecords[dst] = newTrustEntry;

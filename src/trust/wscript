@@ -7,10 +7,8 @@
 #     conf.check_nonfatal(header_name='stdint.h', define_name='HAVE_STDINT_H')
 
 def build(bld):
-    module = bld.create_ns3_module('trust', ['core'])
+    module = bld.create_ns3_module('trust', ['core', 'network'])
     module.source = [
-        'model/trust.cc',
-        'helper/trust-helper.cc',
         'model/trust-manager.cc',
         'model/trust-entry.cc',
         'model/trust-table.cc',
@@ -24,8 +22,6 @@ def build(bld):
     headers = bld(features='ns3header')
     headers.module = 'trust'
     headers.source = [
-        'model/trust.h',
-        'helper/trust-helper.h',
         'model/trust-manager.h',
         'model/trust-entry.h',
         'model/trust-table.h',

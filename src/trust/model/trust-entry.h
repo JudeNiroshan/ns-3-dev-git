@@ -27,7 +27,7 @@
 namespace ns3 {
 
 /**
- * \ingroup internet
+ * \ingroup trust
  * \defgroup trust Trust management framework.
  *
  * The Trust Management Framework is built-in support to implement custom
@@ -36,57 +36,57 @@ namespace ns3 {
 
 /**
  * \ingroup trust
- * \brief The entry object which represent a row in trust table.
+ * \brief A data structure to hold the trust value and timestamp corresponding
+ *        to the address of another node on the network.
  */
 class TrustEntry
 {
-private:
-  // Address of a neighbour node
-  Address m_neighbourAddress;
-  // trust value for a given neighbour node
-  double m_trustValue;
-  // Timestamp when the trust value has been set
-  Time m_timestamp;
-
 public:
   TrustEntry ();
   virtual ~TrustEntry ();
 
   /**
-   * \brief Returns the neighbour address of trust table entry
-   * \returns the IPv4 address of the neighbour node
+   * \brief Returns the address of trust table entry
+   * \returns the IPv4 address of the node
    */
-  Address GetNeighbourAddress ();
+  Address GetAddress (void) const;
 
   /**
-   * \brief Set the neighbour address to trust table entry
-   * \param [in] neighbourAddress address of neighbour node
+   * \brief Set the address of the trust table entry
+   * \param [in] address address of node
    */
-  void SetNeighbourAddress (Address neighbourAddress);
+  void SetAddress (Address address);
 
   /**
    * \brief Get the timestamp of the trust table entry
-   * \returns Time object reference represent the m_timestamp
+   * \returns Time object corresponding to the timestamp
    */
-  const Time& GetTimestamp ();
+  Time GetTimestamp (void) const;
 
   /**
    * \brief Set the timestamp of the trust table entry
-   * \param [in] timestamp Time object reference represent the m_timestamp
+   * \param [in] timestamp Time object corresponding to the timestamp
    */
-  void SetTimestamp (const Time& timestamp);
+  void SetTimestamp (Time timestamp);
 
   /**
    * \brief Get the trust value of the trust table entry
-   * \returns double trust value
+   * \returns trust value
    */
-  double GetTrustValue ();
+  double GetTrustValue (void) const;
 
   /**
    * \brief Set the trust value of the trust table entry
-   * \param [in] trustValue double trust value
+   * \param [in] trustValue trust value
    */
   void SetTrustValue (double trustValue);
+private:
+  // Address of a node in the network
+  Address m_address;
+  // trust value for a given node
+  double m_trustValue;
+  // Timestamp when the trust value has been set
+  Time m_timestamp;
 };
 } // namespace ns3
 

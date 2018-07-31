@@ -52,9 +52,16 @@ public:
    */
   TrustTable m_trustTable;
 
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
+
   TrustManager ();
   virtual ~TrustManager ();
 
+#ifdef NOTYET
   /**
    * \brief calculate the trust value for a given IPv4 address host
    * with in the network simulation
@@ -62,6 +69,7 @@ public:
    * \Return double type of trust value
    */
   virtual double calculateTrust (Address ipv4Address) = 0;
+#endif
 
 };
 

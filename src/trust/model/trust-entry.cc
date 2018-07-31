@@ -18,46 +18,52 @@
  * Author: Jude Niroshan <jude.niroshan11@gmail.com>
  */
 
+#include "ns3/log.h"
 #include "trust-entry.h"
 
 namespace ns3 {
 
+NS_LOG_COMPONENT_DEFINE ("TrustEntry");
+
 TrustEntry::TrustEntry ()
 {
+  NS_LOG_FUNCTION (this);
 }
 
 TrustEntry::~TrustEntry ()
 {
+  NS_LOG_FUNCTION (this);
 }
 
-Address TrustEntry::GetNeighbourAddress ()
+Address TrustEntry::GetAddress (void) const
 {
-  return this->m_neighbourAddress;
+  NS_LOG_FUNCTION (this);
+  return m_address;
 }
 
-void TrustEntry::SetNeighbourAddress (Address neighbourAddress)
+void TrustEntry::SetAddress (Address address)
 {
-  this->m_neighbourAddress = neighbourAddress;
+  m_address = address;
 }
 
-const Time& TrustEntry::GetTimestamp ()
+Time TrustEntry::GetTimestamp (void) const
 {
-  return this->m_timestamp;
+  return m_timestamp;
 }
 
-void TrustEntry::SetTimestamp (const Time& timestamp)
+void TrustEntry::SetTimestamp (Time timestamp)
 {
-  this->m_timestamp = timestamp;
+  m_timestamp = timestamp;
 }
 
-double TrustEntry::GetTrustValue ()
+double TrustEntry::GetTrustValue (void) const
 {
-  return this->m_trustValue;
+  return m_trustValue;
 }
 
 void TrustEntry::SetTrustValue (double trustValue)
 {
-  this->m_trustValue = trustValue;
+  m_trustValue = trustValue;
 }
 
 } // namespace ns3
