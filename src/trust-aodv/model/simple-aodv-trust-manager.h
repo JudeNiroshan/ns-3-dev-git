@@ -21,8 +21,8 @@
 #ifndef SIMPLE_AODV_TRUST_MANAGER_H_
 #define SIMPLE_AODV_TRUST_MANAGER_H_
 
-#include "ns3/trust-manager.h"
 #include "aodv-trust-entry.h"
+#include "ns3/trust-manager.h"
 #include "ns3/network-module.h"
 #include "ns3/ipv4-address.h"
 #include "ns3/ipv4-routing-protocol.h"

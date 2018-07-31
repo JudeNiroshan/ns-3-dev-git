@@ -19,9 +19,9 @@
  */
 
 #include "simple-aodv-trust-manager.h"
+#include "aodv-trust-entry.h"
 #include "ns3/aodv-packet.h"
 #include "ns3/ipv4-header.h"
-#include "aodv-trust-entry.h"
 #include "ns3/ipv4-l3-protocol.h"
 
 namespace ns3 {

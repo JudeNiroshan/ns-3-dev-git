@@ -23,7 +23,7 @@
 #include <iostream>
 #include <cmath>
 #include "ns3/aodv-module.h"
-#include "ns3/malicious-aodv-module.h"
+#include "ns3/trust-aodv-module.h"
 #include "ns3/netanim-module.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"

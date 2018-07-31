@@ -21,9 +21,9 @@
 #ifndef TRUSTTABLE_H_
 #define TRUSTTABLE_H_
 
-#include "trust-entry.h"
 #include "ns3/address.h"
 #include <map>
+#include "trust-entry.h"
 
 using std::map;
 

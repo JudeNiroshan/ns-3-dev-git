@@ -19,6 +19,7 @@
  */
 
 #include "trust-table.h"
+
 #include "ns3/simulator.h"
 
 namespace ns3 {

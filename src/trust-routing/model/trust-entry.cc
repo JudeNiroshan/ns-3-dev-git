@@ -18,8 +18,8 @@
  * Author: Jude Niroshan <jude.niroshan11@gmail.com>
  */
 
-#include "ns3/log.h"
 #include "trust-entry.h"
+#include "ns3/log.h"
 
 namespace ns3 {
 

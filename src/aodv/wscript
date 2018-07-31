@@ -1,7 +1,7 @@
 ## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
 
 def build(bld):
-    module = bld.create_ns3_module('aodv', ['internet', 'wifi', 'trust'])
+    module = bld.create_ns3_module('aodv', ['internet', 'wifi'])
     module.includes = '.'
     module.source = [
         'model/aodv-id-cache.cc',
@@ -12,8 +12,6 @@ def build(bld):
         'model/aodv-neighbor.cc',
         'model/aodv-routing-protocol.cc',
         'helper/aodv-helper.cc',
-        'model/aodv-trust-entry.cc',
-        'model/simple-aodv-trust-manager.cc',
         ]
 
     aodv_test = bld.create_ns3_module_test_library('aodv')
@@ -36,8 +34,6 @@ def build(bld):
         'model/aodv-neighbor.h',
         'model/aodv-routing-protocol.h',
         'helper/aodv-helper.h',
-        'model/aodv-trust-entry.h',
-        'model/simple-aodv-trust-manager.h',
         ]
 
     if bld.env['ENABLE_EXAMPLES']:

@@ -24,7 +24,7 @@
 #include "ns3/object.h"
 #include "ns3/node.h"
 #include "ns3/address.h"
-#include "ns3/trust-table.h"
+#include "trust-table.h"
 
 namespace ns3 {
 
