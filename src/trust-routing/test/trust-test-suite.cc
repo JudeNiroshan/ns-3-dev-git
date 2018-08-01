@@ -1,7 +1,7 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 
 // Include a header file from your module to test.
-#include "ns3/trust.h"
+#include "ns3/trust-table.h"
 
 // An essential include is test.h
 #include "ns3/test.h"
@@ -33,6 +33,33 @@ TrustTestCase1::~TrustTestCase1 ()
 {
 }
 
+/**
+ * \ingroup aodv-test
+ * \ingroup tests
+ *
+ * \brief Unit test for AODV routing table
+ *      Unit test steps:
+ *        - Create an empty trust table
+ *        - Call LookupTrustEntry => should return false
+ *        - Add a new trust entry to trust table
+ *        - Call LookupTrustEntry => should return true
+ *        - Update trust value in the trust table
+ *        - Call LookupTrustEntry => should return true
+ *        - Remove trust entry from the trust table
+ *        - Call LookupTrustEntry => should return false
+ */
+struct TrustTableTest : public TestCase
+{
+  TrustTableTest () : TestCase ("TrustTable")
+  {
+  }
+  virtual void DoRun ()
+  {
+
+  }
+};
+
+
 //
 // This method is the pure virtual method from class TestCase that every
 // TestCase must implement
@@ -61,6 +88,7 @@ TrustTestSuite::TrustTestSuite ()
 {
   // TestDuration for TestCase can be QUICK, EXTENSIVE or TAKES_FOREVER
   AddTestCase (new TrustTestCase1, TestCase::QUICK);
+  AddTestCase (new TrustTableTest, TestCase::QUICK);
 }
 
 // Do not forget to allocate an instance of this TestSuite
