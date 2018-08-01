@@ -55,14 +55,14 @@ public:
 
 protected:
   virtual void DoInitialize (void);
-private:
-
-private:
 
   ///\name Receive control packets
   //\{
   /// Receive and process control packet
-  void RecvAodv (Ptr<Socket> socket);
+  virtual void RecvAodv (Ptr<Socket> socket);
+  /// Receive RREP, but forwards a forget RREP with hop count equal to 1
+  void MaliciousRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address sender);
+
   //\}
 
   /// @}

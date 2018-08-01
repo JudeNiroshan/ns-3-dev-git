@@ -23,6 +23,7 @@
 #include "ns3/aodv-packet.h"
 #include "ns3/ipv4-header.h"
 #include "ns3/ipv4-l3-protocol.h"
+#include "ns3/log.h"
 
 namespace ns3 {
 
@@ -53,7 +54,7 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
                                                            const Address &to,
                                                            NetDevice::PacketType packetType)
 {
-  std::cout << "JUDE ADDED FROM : " << from << std::endl;
+  NS_LOG_INFO ("JUDE ADDED FROM : " << from);
 
   Ipv4Header ipv4Header;
 
@@ -79,28 +80,28 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
     case AODVTYPE_RREQ:
       {
         // increment RREQ count
-        std::cout << "RREQ captured in Promiscuous callback function" << std::endl;
+        NS_LOG_INFO ("RREQ captured in Promiscuous callback function");
         aodvTrustEntry.SetRreq (aodvTrustEntry.GetRreq () + 1);
         break;
       }
     case AODVTYPE_RREP:
       {
         // increment RPLY count
-        std::cout << "RREP captured in Promiscuous callback function" << std::endl;
+        NS_LOG_INFO ("RREP captured in Promiscuous callback function");
         aodvTrustEntry.SetRply (aodvTrustEntry.GetRply () + 1);
         break;
       }
     case AODVTYPE_RERR:
       {
         // increment ERR count
-        std::cout << "RERR captured in Promiscuous callback function" << std::endl;
+        NS_LOG_INFO ("RERR captured in Promiscuous callback function");
         aodvTrustEntry.SetErr (aodvTrustEntry.GetErr () + 1);
         break;
       }
     case AODVTYPE_RREP_ACK:
       {
         // increment ERR count
-        std::cout << "RREP_ACK captured in Promiscuous callback function" << std::endl;
+        NS_LOG_INFO ("RREP_ACK captured in Promiscuous callback function");
 //        aodvTrustEntry.SetErr(aodvTrustEntry.Get + 1);
         break;
       }
