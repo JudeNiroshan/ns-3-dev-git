@@ -1,4 +1,4 @@
-/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+  /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2018 Sri Lanka Institute of Information Technology
  *
@@ -31,49 +31,49 @@ AodvTrustEntry::~AodvTrustEntry ()
 {
 }
 
-uint16_t AodvTrustEntry::GetErr () const
+uint16_t AodvTrustEntry::GetError () const
 {
-  return this->err;
+  return m_error;
 }
 
-void AodvTrustEntry::SetErr (uint16_t err)
+void AodvTrustEntry::SetError (uint16_t err)
 {
-  this->err = err;
+  m_error = err;
 }
 
 uint16_t AodvTrustEntry::GetHello () const
 {
-  return this->hello;
+  return m_hello;
 }
 
 void AodvTrustEntry::SetHello (uint16_t hello)
 {
-  this->hello = hello;
+  m_hello = hello;
 }
 
-uint16_t AodvTrustEntry::GetRply () const
+uint16_t AodvTrustEntry::GetReply () const
 {
-  return this->rply;
+  return m_reply;
 }
 
-void AodvTrustEntry::SetRply (uint16_t rply)
+void AodvTrustEntry::SetReply (uint16_t rply)
 {
-  this->rply = rply;
+  m_reply = rply;
 }
 
 uint16_t AodvTrustEntry::GetRreq () const
 {
-  return this->rreq;
+  return m_rreq;
 }
 
 void AodvTrustEntry::SetRreq (uint16_t rreq)
 {
-  this->rreq = rreq;
+  m_rreq = rreq;
 }
 
 std::ostream &operator<< (std::ostream &os, AodvTrustEntry const &m)
 {
-  os << "rreq=" << m.GetRreq() << "|" << "rrep=" << m.GetRply();
+  os << "rreq=" << m.GetRreq() << "|" << "rrep=" << m.GetReply();
   return os;
 }
 

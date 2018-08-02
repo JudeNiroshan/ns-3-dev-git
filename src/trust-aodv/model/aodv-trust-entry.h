@@ -41,13 +41,13 @@ class AodvTrustEntry
 {
 private:
   // number of rreq messages
-  uint16_t rreq;
+  uint16_t m_rreq;
   // number of reply messages
-  uint16_t rply;
+  uint16_t m_reply;
   // number of error message
-  uint16_t err;
+  uint16_t m_error;
   // number of hello message
-  uint16_t hello;
+  uint16_t m_hello;
 
 public:
   AodvTrustEntry ();
@@ -57,13 +57,13 @@ public:
    * \brief Returns the error count of trust table entry
    * \returns uint16_t of the error count
    */
-  uint16_t GetErr () const;
+  uint16_t GetError () const;
 
   /**
    * \brief Set the error count of trust table entry
    * \param [in] err uint16_t of the error count
    */
-  void SetErr (uint16_t err);
+  void SetError (uint16_t err);
 
   /**
    * \brief Returns the hello count of trust table entry
@@ -81,13 +81,13 @@ public:
    * \brief Returns the reply count of trust table entry
    * \returns uint16_t of the reply count
    */
-  uint16_t GetRply () const;
+  uint16_t GetReply () const;
 
   /**
    * \brief Set the reply count of trust table entry
    * \param [in] reply uint16_t of the reply count
    */
-  void SetRply (uint16_t rply);
+  void SetReply (uint16_t rply);
 
   /**
    * \brief Returns the rreq count of trust table entry
