@@ -22,7 +22,9 @@
 #include "aodv-trust-entry.h"
 #include "ns3/aodv-packet.h"
 #include "ns3/ipv4-header.h"
+#include "ns3/udp-header.h"
 #include "ns3/ipv4-l3-protocol.h"
+#include "ns3/aodv-routing-protocol.h"
 #include "ns3/log.h"
 
 namespace ns3 {
@@ -54,8 +56,7 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
                                                            const Address &to,
                                                            NetDevice::PacketType packetType)
 {
-  NS_LOG_INFO ("JUDE ADDED FROM : " << from);
-
+  NS_LOG_INFO("JUDE ADDED FROM : " << from);
   Ipv4Header ipv4Header;
 
   if (protocol != Ipv4L3Protocol::PROT_NUMBER)
@@ -63,7 +64,6 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
       return false;
     }
   packet->PeekHeader (ipv4Header);
-
   Ipv4Address ipv4Address = ipv4Header.GetSource ();
   std::map<Ipv4Address, AodvTrustEntry>::iterator i = m_trustParameters.find (ipv4Address);
   AodvTrustEntry aodvTrustEntry;
@@ -71,6 +71,13 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
   if (i != m_trustParameters.end ())
     {
       aodvTrustEntry = i->second;
+    }
+  UdpHeader udpHeader;
+  packet->PeekHeader (udpHeader);
+
+  if (udpHeader.GetDestinationPort () != RoutingProtocol::AODV_PORT)
+    {
+      return false;
     }
 
   TypeHeader tHeader;
@@ -80,28 +87,28 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
     case AODVTYPE_RREQ:
       {
         // increment RREQ count
-        NS_LOG_INFO ("RREQ captured in Promiscuous callback function");
+        NS_LOG_INFO("RREQ captured in Promiscuous callback function");
         aodvTrustEntry.SetRreq (aodvTrustEntry.GetRreq () + 1);
         break;
       }
     case AODVTYPE_RREP:
       {
         // increment RPLY count
-        NS_LOG_INFO ("RREP captured in Promiscuous callback function");
+        NS_LOG_INFO("RREP captured in Promiscuous callback function");
         aodvTrustEntry.SetReply (aodvTrustEntry.GetReply () + 1);
         break;
       }
     case AODVTYPE_RERR:
       {
         // increment ERR count
-        NS_LOG_INFO ("RERR captured in Promiscuous callback function");
+        NS_LOG_INFO("RERR captured in Promiscuous callback function");
         aodvTrustEntry.SetError (aodvTrustEntry.GetError () + 1);
         break;
       }
     case AODVTYPE_RREP_ACK:
       {
         // increment ERR count
-        NS_LOG_INFO ("RREP_ACK captured in Promiscuous callback function");
+        NS_LOG_INFO("RREP_ACK captured in Promiscuous callback function");
 //        aodvTrustEntry.SetErr(aodvTrustEntry.Get + 1);
         break;
       }
