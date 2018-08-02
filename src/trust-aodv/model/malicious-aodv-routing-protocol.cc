@@ -114,7 +114,7 @@ RoutingProtocol::RecvAodv (Ptr<Socket> socket)
       }
     case aodv::AODVTYPE_RREP:
       {
-        RecvReply (packet, receiver, sender);
+        MaliciousRecvReply (packet, receiver, sender);
         break;
       }
     case aodv::AODVTYPE_RERR:
@@ -135,6 +135,146 @@ RoutingProtocol::DoInitialize (void)
 {
   NS_LOG_FUNCTION (this);
   aodv::RoutingProtocol::DoInitialize ();
+}
+
+void
+RoutingProtocol::MaliciousRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address sender)
+{
+  NS_LOG_FUNCTION (this << " src " << sender);
+  aodv::RrepHeader rrepHeader;
+  p->RemoveHeader (rrepHeader);
+  Ipv4Address dst = rrepHeader.GetDst ();
+  NS_LOG_LOGIC ("RREP destination " << dst << " RREP origin " << rrepHeader.GetOrigin ());
+
+  uint8_t hop = rrepHeader.GetHopCount () + 1;
+  rrepHeader.SetHopCount (hop);
+
+  // If RREP is Hello message
+  if (dst == rrepHeader.GetOrigin ())
+    {
+      ProcessHello (rrepHeader, receiver);
+      return;
+    }
+
+  /*
+   * If the route table entry to the destination is created or updated, then the following actions occur:
+   * -  the route is marked as active,
+   * -  the destination sequence number is marked as valid,
+   * -  the next hop in the route entry is assigned to be the node from which the RREP is received,
+   *    which is indicated by the source IP address field in the IP header,
+   * -  the hop count is set to the value of the hop count from RREP message + 1
+   * -  the expiry time is set to the current time plus the value of the Lifetime in the RREP message,
+   * -  and the destination sequence number is the Destination Sequence Number in the RREP message.
+   */
+  Ptr<NetDevice> dev = m_ipv4->GetNetDevice (m_ipv4->GetInterfaceForAddress (receiver));
+  aodv::RoutingTableEntry newEntry (/*device=*/ dev, /*dst=*/ dst, /*validSeqNo=*/ true, /*seqno=*/ rrepHeader.GetDstSeqno (),
+                                    /*iface=*/ m_ipv4->GetAddress (m_ipv4->GetInterfaceForAddress (receiver), 0),/*hop=*/ hop,
+                                    /*nextHop=*/ sender, /*lifeTime=*/ rrepHeader.GetLifeTime ());
+  aodv::RoutingTableEntry toDst;
+  if (m_routingTable.LookupRoute (dst, toDst))
+    {
+      /*
+       * The existing entry is updated only in the following circumstances:
+       * (i) the sequence number in the routing table is marked as invalid in route table entry.
+       */
+      if (!toDst.GetValidSeqNo ())
+        {
+          m_routingTable.Update (newEntry);
+        }
+      // (ii)the Destination Sequence Number in the RREP is greater than the node's copy of the destination sequence number and the known value is valid,
+      else if ((int32_t (rrepHeader.GetDstSeqno ()) - int32_t (toDst.GetSeqNo ())) > 0)
+        {
+          m_routingTable.Update (newEntry);
+        }
+      else
+        {
+          // (iii) the sequence numbers are the same, but the route is marked as inactive.
+          if ((rrepHeader.GetDstSeqno () == toDst.GetSeqNo ()) && (toDst.GetFlag () != aodv::VALID))
+            {
+              m_routingTable.Update (newEntry);
+            }
+          // (iv)  the sequence numbers are the same, and the New Hop Count is smaller than the hop count in route table entry.
+          else if ((rrepHeader.GetDstSeqno () == toDst.GetSeqNo ()) && (hop < toDst.GetHop ()))
+            {
+              m_routingTable.Update (newEntry);
+            }
+        }
+    }
+  else
+    {
+      // The forward route for this destination is created if it does not already exist.
+      NS_LOG_LOGIC ("add new route");
+      m_routingTable.AddRoute (newEntry);
+    }
+  // Acknowledge receipt of the RREP by sending a RREP-ACK message back
+  if (rrepHeader.GetAckRequired ())
+    {
+      SendReplyAck (sender);
+      rrepHeader.SetAckRequired (false);
+    }
+  NS_LOG_LOGIC ("receiver " << receiver << " origin " << rrepHeader.GetOrigin ());
+  if (IsMyOwnAddress (rrepHeader.GetOrigin ()))
+    {
+      if (toDst.GetFlag () == aodv::IN_SEARCH)
+        {
+          m_routingTable.Update (newEntry);
+          m_addressReqTimer[dst].Remove ();
+          m_addressReqTimer.erase (dst);
+        }
+      m_routingTable.LookupRoute (dst, toDst);
+      SendPacketFromQueue (dst, toDst.GetRoute ());
+      return;
+    }
+
+  aodv::RoutingTableEntry toOrigin;
+  if (!m_routingTable.LookupRoute (rrepHeader.GetOrigin (), toOrigin) || toOrigin.GetFlag () == aodv::IN_SEARCH)
+    {
+      return; // Impossible! drop.
+    }
+  toOrigin.SetLifeTime (std::max (m_activeRouteTimeout, toOrigin.GetLifeTime ()));
+  m_routingTable.Update (toOrigin);
+
+  // Update information about precursors
+  if (m_routingTable.LookupValidRoute (rrepHeader.GetDst (), toDst))
+    {
+      toDst.InsertPrecursor (toOrigin.GetNextHop ());
+      m_routingTable.Update (toDst);
+
+      aodv::RoutingTableEntry toNextHopToDst;
+      m_routingTable.LookupRoute (toDst.GetNextHop (), toNextHopToDst);
+      toNextHopToDst.InsertPrecursor (toOrigin.GetNextHop ());
+      m_routingTable.Update (toNextHopToDst);
+
+      toOrigin.InsertPrecursor (toDst.GetNextHop ());
+      m_routingTable.Update (toOrigin);
+
+      aodv::RoutingTableEntry toNextHopToOrigin;
+      m_routingTable.LookupRoute (toOrigin.GetNextHop (), toNextHopToOrigin);
+      toNextHopToOrigin.InsertPrecursor (toDst.GetNextHop ());
+      m_routingTable.Update (toNextHopToOrigin);
+    }
+  SocketIpTtlTag tag;
+  p->RemovePacketTag (tag);
+  if (tag.GetTtl () < 2)
+    {
+      NS_LOG_DEBUG ("TTL exceeded. Drop RREP destination " << dst << " origin " << rrepHeader.GetOrigin ());
+      return;
+    }
+
+  Ptr<Packet> packet = Create<Packet> ();
+  SocketIpTtlTag ttl;
+  ttl.SetTtl (tag.GetTtl () - 1);
+  packet->AddPacketTag (ttl);
+
+  // here we forge the hop count
+  rrepHeader.SetHopCount (1);
+
+  packet->AddHeader (rrepHeader);
+  aodv::TypeHeader tHeader (aodv::AODVTYPE_RREP);
+  packet->AddHeader (tHeader);
+  Ptr<Socket> socket = FindSocketWithInterfaceAddress (toOrigin.GetInterface ());
+  NS_ASSERT (socket);
+  socket->SendTo (packet, 0, InetSocketAddress (toOrigin.GetNextHop (), AODV_PORT));
 }
 
 } //namespace maliciousaodv
