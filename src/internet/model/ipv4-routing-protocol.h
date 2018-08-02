@@ -55,10 +55,7 @@ class NetDevice;
  */
 class Ipv4RoutingProtocol : public Object
 {
-
 public:
-
-
   /**
    * \brief Get the type ID.
    * \return the object TypeId

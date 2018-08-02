@@ -49,7 +49,6 @@ public:
    * Destroy an instance of an Ipv4RoutingHelper
    */
   virtual ~Ipv4RoutingHelper ();
-  Ipv4RoutingHelper ();
 
   /**
    * \brief virtual constructor
@@ -190,24 +189,7 @@ public:
   template<class T>
   static Ptr<T> GetRouting (Ptr<Ipv4RoutingProtocol> protocol);
   
-  /**
-   * \brief Set boolean flag to enable or disable trust based framework
-   * \param [in] enableTrust enable or disable trust framework
-   */
-  void SetEnableTrust (bool enableTrust);
-
-  /**
-   * \brief Trust based framework is enabled or not
-   * \returns bool whether trust based framework is enabled or disabled
-   */
-  bool IsEnableTrust ();
-
-protected:
-
-  bool enableTrust;
-
 private:
-
   /**
    * \brief prints the routing tables of a node.
    * \param node The node ptr for which we need the routing table to be printed
