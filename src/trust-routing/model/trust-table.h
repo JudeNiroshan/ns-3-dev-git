@@ -25,12 +25,10 @@
 #include "ns3/address.h"
 #include <map>
 
-using std::map;
-
 namespace ns3 {
 
 /**
- * \ingroup internet
+ * \ingroup trust
  * \defgroup trust Trust management framework.
  *
  * The Trust Management Framework is built-in support to implement custom

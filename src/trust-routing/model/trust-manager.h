@@ -32,7 +32,7 @@ class TrustManager : public Object
 {
 
   /**
-   * \ingroup internet
+   * \ingroup trust
    * \defgroup trust Trust management framework.
    *
    * The Trust Management Framework is built-in support to implement custom
