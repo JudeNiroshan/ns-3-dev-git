@@ -46,6 +46,13 @@ public:
   virtual ~TrustEntry ();
 
   /**
+   * \breif constructor which accepts all the values for the entry
+   */
+  TrustEntry (Address dst,
+              double trust,
+              Time timestamp);
+
+  /**
    * \brief Returns the address of trust table entry
    * \returns the IPv4 address of the node
    */

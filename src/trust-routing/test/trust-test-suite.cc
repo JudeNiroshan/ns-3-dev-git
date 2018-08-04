@@ -5,33 +5,11 @@
 
 // An essential include is test.h
 #include "ns3/test.h"
+#include "ns3/ipv4-header.h"
 
 // Do not put your test classes in namespace ns3.  You may find it useful
 // to use the using directive to access the ns3 namespace directly
 using namespace ns3;
-
-// This is an example TestCase.
-class TrustTestCase1 : public TestCase
-{
-public:
-  TrustTestCase1 ();
-  virtual ~TrustTestCase1 ();
-
-private:
-  virtual void DoRun (void);
-};
-
-// Add some help text to this case to describe what it is intended to test
-TrustTestCase1::TrustTestCase1 ()
-  : TestCase ("Trust test case (does nothing)")
-{
-}
-
-// This destructor does nothing but we include it as a reminder that
-// the test case should clean up after itself
-TrustTestCase1::~TrustTestCase1 ()
-{
-}
 
 /**
  * \ingroup aodv-test
@@ -55,23 +33,19 @@ struct TrustTableTest : public TestCase
   }
   virtual void DoRun ()
   {
+    TrustTable trustTable;
+    TrustEntry testEntry;
+    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), false, "trivial");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.AddRecord (Ipv4Address ("1.2.3.4"), 0.456), true, "trivial");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), true, "trivial");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.UpdateRecord (Ipv4Address ("1.2.3.4"), 0.789), true, "trivial");
+    testEntry.SetTrustValue (0.789);
+    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), true, "trivial");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.RemoveRecord (Ipv4Address ("1.2.3.4")), true, "trivial");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), false, "trivial");
 
   }
 };
-
-
-//
-// This method is the pure virtual method from class TestCase that every
-// TestCase must implement
-//
-void
-TrustTestCase1::DoRun (void)
-{
-  // A wide variety of test macros are available in src/core/test.h
-  NS_TEST_ASSERT_MSG_EQ (true, true, "true doesn't equal true for some reason");
-  // Use this one for floating point comparisons
-  NS_TEST_ASSERT_MSG_EQ_TOL (0.01, 0.01, 0.001, "Numbers are not equal within tolerance");
-}
 
 // The TestSuite class names the TestSuite, identifies what type of TestSuite,
 // and enables the TestCases to be run.  Typically, only the constructor for
@@ -84,10 +58,9 @@ public:
 };
 
 TrustTestSuite::TrustTestSuite ()
-  : TestSuite ("trust", UNIT)
+  : TestSuite ("trust-routing", UNIT)
 {
   // TestDuration for TestCase can be QUICK, EXTENSIVE or TAKES_FOREVER
-  AddTestCase (new TrustTestCase1, TestCase::QUICK);
   AddTestCase (new TrustTableTest, TestCase::QUICK);
 }
 

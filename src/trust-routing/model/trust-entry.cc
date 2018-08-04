@@ -35,6 +35,15 @@ TrustEntry::~TrustEntry ()
   NS_LOG_FUNCTION (this);
 }
 
+TrustEntry::TrustEntry (Address dst,
+              double trust,
+              Time timestamp)
+{
+  m_address = dst;
+  m_trustValue = trust;
+  m_timestamp = timestamp;
+}
+
 Address TrustEntry::GetAddress (void) const
 {
   NS_LOG_FUNCTION (this);
