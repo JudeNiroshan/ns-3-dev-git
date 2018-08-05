@@ -28,7 +28,7 @@ namespace ns3 {
  * \ingroup aodv-test
  * \ingroup tests
  *
- * \brief Unit test for AODV routing table
+ * \brief Unit test for trust table
  *      Unit test steps:
  *        - Create an empty trust table
  *        - Call LookupTrustEntry => should return false
@@ -48,14 +48,26 @@ struct TrustTableTest : public TestCase
   {
     TrustTable trustTable;
     TrustEntry testEntry;
-    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), false, "trivial");
-    NS_TEST_EXPECT_MSG_EQ (trustTable.AddRecord (Ipv4Address ("1.2.3.4"), 0.456), true, "trivial");
-    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), true, "trivial");
-    NS_TEST_EXPECT_MSG_EQ (trustTable.UpdateRecord (Ipv4Address ("1.2.3.4"), 0.789), true, "trivial");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), false, "Trust table is not empty");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.AddRecord (Ipv4Address ("1.2.3.4"), 0.456), true, "Trust table add new record failed");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), true, "lookup in trust table failed");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.UpdateRecord (Ipv4Address ("1.2.3.4"), 0.789), true, "Trust table updating records failed");
     testEntry.SetTrustValue (0.789);
-    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), true, "trivial");
-    NS_TEST_EXPECT_MSG_EQ (trustTable.RemoveRecord (Ipv4Address ("1.2.3.4")), true, "trivial");
-    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), false, "trivial");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), true, "lookup in trust table failed");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.RemoveRecord (Ipv4Address ("1.2.3.4")), true, "Trust table remove record failed");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), false, "lookup in trust table failed");
+
+    //Remove a record that doesn't exist in trust table
+    NS_TEST_EXPECT_MSG_EQ (trustTable.RemoveRecord (Ipv4Address ("1.2.3.4")), false, "Trust table remove record failed");
+
+    //Add a new record with invalid trust value
+    NS_TEST_EXPECT_MSG_EQ (trustTable.AddRecord (Ipv4Address ("1.2.3.4"), (-0.456)), false, "Trust table add new record failed for negative trust value");
+
+    //Update to invalid trust value
+    NS_TEST_EXPECT_MSG_EQ (trustTable.UpdateRecord (Ipv4Address ("1.2.3.4"), (-0.789)), false, "Trust table updating records failed for negative trust value");
+
+    //Add or remove with negative trust value
+    NS_TEST_EXPECT_MSG_EQ (trustTable.AddOrUpdateTrustTableEntry (Ipv4Address ("1.2.3.4"), (-0.789)), false, "Trust table add or updating records failed for negative trust value");
 
   }
 };

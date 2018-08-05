@@ -30,6 +30,10 @@ TrustTable::TrustTable ()
 bool TrustTable::AddRecord (Address address,
                             double trustValue)
 {
+  if (trustValue < 0)
+    {
+      return false;
+    }
   TrustEntry newTrustEntry;
   newTrustEntry.SetAddress (address);
   newTrustEntry.SetTrustValue (trustValue);
@@ -51,6 +55,11 @@ bool TrustTable::RemoveRecord (Address address)
 bool TrustTable::UpdateRecord (Address address,
                                double trustValue)
 {
+  if (trustValue < 0)
+    {
+      return false;
+    }
+
   std::map<Address, TrustEntry>::iterator i = m_tableRecords.find (address);
   if (i == m_tableRecords.end ())
     {
