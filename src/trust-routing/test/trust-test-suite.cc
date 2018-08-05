@@ -57,6 +57,11 @@ struct TrustTableTest : public TestCase
     NS_TEST_EXPECT_MSG_EQ (trustTable.RemoveRecord (Ipv4Address ("1.2.3.4")), true, "Trust table remove record failed");
     NS_TEST_EXPECT_MSG_EQ (trustTable.LookupTrustEntry (Ipv4Address ("1.2.3.4"), testEntry), false, "lookup in trust table failed");
 
+    //Add a record that already exists in trust table
+    NS_TEST_EXPECT_MSG_EQ (trustTable.AddRecord (Ipv4Address ("1.2.3.4"), 0.456), true, "Trust table add new record failed");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.AddRecord (Ipv4Address ("1.2.3.4"), 0.456), false, "Trust table add new record failed");
+    NS_TEST_EXPECT_MSG_EQ (trustTable.RemoveRecord (Ipv4Address ("1.2.3.4")), true, "Trust table remove record failed");
+
     //Remove a record that doesn't exist in trust table
     NS_TEST_EXPECT_MSG_EQ (trustTable.RemoveRecord (Ipv4Address ("1.2.3.4")), false, "Trust table remove record failed");
 
