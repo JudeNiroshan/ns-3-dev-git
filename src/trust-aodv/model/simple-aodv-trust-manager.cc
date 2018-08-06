@@ -56,15 +56,18 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
                                                            const Address &to,
                                                            NetDevice::PacketType packetType)
 {
-  NS_LOG_INFO("JUDE ADDED FROM : " << from);
   Ipv4Header ipv4Header;
+
+  Ptr<Packet> copyPacket;
+  copyPacket = packet->Copy();
 
   if (protocol != Ipv4L3Protocol::PROT_NUMBER)
     {
       return false;
     }
-  packet->PeekHeader (ipv4Header);
+  copyPacket->RemoveHeader (ipv4Header);
   Ipv4Address ipv4Address = ipv4Header.GetSource ();
+
   std::map<Ipv4Address, AodvTrustEntry>::iterator i = m_trustParameters.find (ipv4Address);
   AodvTrustEntry aodvTrustEntry;
 
@@ -73,7 +76,7 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
       aodvTrustEntry = i->second;
     }
   UdpHeader udpHeader;
-  packet->PeekHeader (udpHeader);
+  copyPacket->RemoveHeader (udpHeader);
 
   if (udpHeader.GetDestinationPort () != RoutingProtocol::AODV_PORT)
     {
@@ -81,33 +84,29 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
     }
 
   TypeHeader tHeader;
-  packet->PeekHeader (tHeader);
+  copyPacket->RemoveHeader (tHeader);
   switch (tHeader.Get ())
     {
     case AODVTYPE_RREQ:
       {
-        // increment RREQ count
         NS_LOG_INFO("RREQ captured in Promiscuous callback function");
         aodvTrustEntry.SetRreq (aodvTrustEntry.GetRreq () + 1);
         break;
       }
     case AODVTYPE_RREP:
       {
-        // increment RPLY count
         NS_LOG_INFO("RREP captured in Promiscuous callback function");
         aodvTrustEntry.SetReply (aodvTrustEntry.GetReply () + 1);
         break;
       }
     case AODVTYPE_RERR:
       {
-        // increment ERR count
         NS_LOG_INFO("RERR captured in Promiscuous callback function");
         aodvTrustEntry.SetError (aodvTrustEntry.GetError () + 1);
         break;
       }
     case AODVTYPE_RREP_ACK:
       {
-        // increment ERR count
         NS_LOG_INFO("RREP_ACK captured in Promiscuous callback function");
 //        aodvTrustEntry.SetErr(aodvTrustEntry.Get + 1);
         break;
@@ -117,13 +116,8 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
   m_trustParameters[ipv4Address] = aodvTrustEntry;
   double calculatedTrust = this->calculateTrust (ipv4Address);
 
-  /* Ptr<Node> node = GetObject<Node> ();
-   Ptr<Ipv4RoutingProtocol> m_ipv4Routing;
-   m_ipv4Routing = Ipv4RoutingHelper::GetRouting<Ipv4RoutingProtocol> (node->GetObject<Ipv4> ()->GetRoutingProtocol ());*/
   m_trustTable.AddOrUpdateTrustTableEntry (ipv4Address,
                                            calculatedTrust);
-
-  NS_LOG_FUNCTION(device << packet << protocol << &from << &to << packetType);
 
   return true;
 }

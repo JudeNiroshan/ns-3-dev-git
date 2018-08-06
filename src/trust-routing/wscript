@@ -16,7 +16,7 @@ def build(bld):
 
     module_test = bld.create_ns3_module_test_library('trust-routing')
     module_test.source = [
-        'test/trust-test-suite.cc',
+        'test/trust-routing-test-suite.cc',
         ]
 
     headers = bld(features='ns3header')

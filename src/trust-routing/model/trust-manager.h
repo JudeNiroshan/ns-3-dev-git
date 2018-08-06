@@ -47,7 +47,7 @@ public:
 
   /**
    * \brief trust table which holds trust values for directly connected nodes.
-   * this will be used for trust framework to tranform a protocol into a
+   * this will be used for trust framework to transform a protocol into a
    * trust based variation
    */
   TrustTable m_trustTable;

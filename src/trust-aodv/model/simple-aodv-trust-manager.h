@@ -41,7 +41,11 @@ namespace aodv {
 
 /**
  * \ingroup trust-aodv
- * \brief The aodv specific trust operations handler
+ * \brief This is a demonstration of aodv protocol has been transformed
+ * into a trust based version. This has provided a simplest version of
+ * trust handling implementations for promiscuous callback function
+ * and trust value calculation. This includes user specific implementations
+ * that will be used through the trust framework.
  */
 class SimpleAodvTrustManager : public TrustManager
 {
