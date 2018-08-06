@@ -32,7 +32,6 @@ class TrustManager : public Application
 {
 
   /**
-   * \ingroup trust
    * \defgroup trust Trust management framework.
    *
    * The Trust Management Framework is built-in support to implement custom
@@ -46,13 +45,6 @@ class TrustManager : public Application
 public:
 
   /**
-   * \brief trust table which holds trust values for directly connected nodes.
-   * this will be used for trust framework to transform a protocol into a
-   * trust based variation
-   */
-  TrustTable m_trustTable;
-
-  /**
    * \brief Get the type ID.
    * \return the object TypeId
    */
@@ -61,7 +53,16 @@ public:
   TrustManager ();
   virtual ~TrustManager ();
 
-#ifdef NOTYET
+protected:
+
+  /**
+   * \brief trust table which holds trust values for directly connected nodes.
+   * this will be used for trust framework to transform a protocol into a
+   * trust based variation
+   */
+  TrustTable m_trustTable;
+
+private:
   /**
    * \brief calculate the trust value for a given IPv4 address host
    * with in the network simulation
@@ -69,9 +70,7 @@ public:
    * \Return double type of trust value
    */
   virtual double CalculateTrust (Address ipv4Address) = 0;
-#endif
 
-private:
   /**
    * \brief prints the trust table
    * \param stream The output stream object to use

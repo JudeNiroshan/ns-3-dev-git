@@ -280,8 +280,6 @@ AodvExample::InstallTrustFramework ()
   for (uint32_t i = 0; i < size; ++i)
     {
       Ptr<SimpleAodvTrustManager> simpleAodvTrustManager = CreateObject<SimpleAodvTrustManager>();
-      nodes.Get(i)->AggregateObject(simpleAodvTrustManager);
-      simpleAodvTrustManager->AttachPromiscuousCallbackToNode();
-
+      nodes.Get(i)->AddApplication (simpleAodvTrustManager);
     }
 }

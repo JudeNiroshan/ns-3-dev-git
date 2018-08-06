@@ -29,14 +29,12 @@
 #include "ns3/ipv4-routing-helper.h"
 
 namespace ns3 {
-namespace aodv {
 
 /**
- * \ingroup trust-aodv
- * \defgroup trust Trust management framework.
+ * \defgroup trust-aodv
+ * \ingroup trust
  *
- * The Trust Management Framework is built-in support to implement custom
- * trust based protocols in ns-3.
+ * Trust management framework for the AODV protocol.
  */
 
 /**
@@ -67,6 +65,10 @@ public:
   SimpleAodvTrustManager ();
   virtual ~SimpleAodvTrustManager ();
 
+  // inherited from Application base class.
+  virtual void StartApplication (void);    // Called at time specified by Start
+  virtual void StopApplication (void);     // Called at time specified by Stop
+
   /**
    * \brief Promiscuous callback function which will hooked for nodes.
    * this function will be called upon a packet is being received to the node.
@@ -86,14 +88,8 @@ public:
    */
   double CalculateTrust (Address ipv4Address);
 
-  /**
-   * \brief Hook the promiscuous callback to the aggregated
-   * node object
-   */
-  void AttachPromiscuousCallbackToNode ();
-
 };
 
-}
+
 } // namespace ns3
 #endif

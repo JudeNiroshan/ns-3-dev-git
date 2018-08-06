@@ -296,10 +296,9 @@ AodvExample::InstallTrustFramework ()
   for (uint32_t i = 0; i < size; ++i)
     {
       Ptr<SimpleAodvTrustManager> simpleAodvTrustManager = CreateObject<SimpleAodvTrustManager>();
-      nodes.Get(i)->AggregateObject(simpleAodvTrustManager);
-      simpleAodvTrustManager->AttachPromiscuousCallbackToNode();
+      nodes.Get(i)->AddApplication (simpleAodvTrustManager);
 
-      Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> ("trust.routes", std::ios::out);
+      // Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> ("trust.routes", std::ios::out);
       // simpleAodvTrustManager.PrintTrustTableAt (Seconds (50), routingStream);
     }
 }

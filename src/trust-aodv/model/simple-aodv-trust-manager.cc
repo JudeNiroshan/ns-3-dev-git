@@ -26,11 +26,11 @@
 #include "ns3/ipv4-l3-protocol.h"
 #include "ns3/aodv-routing-protocol.h"
 #include "ns3/log.h"
+#include "ns3/loopback-net-device.h"
 
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE("SimpleAodvTrustManager");
-namespace aodv {
 
 NS_OBJECT_ENSURE_REGISTERED(SimpleAodvTrustManager);
 
@@ -81,34 +81,34 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
   UdpHeader udpHeader;
   copyPacket->RemoveHeader (udpHeader);
 
-  if (udpHeader.GetDestinationPort () != RoutingProtocol::AODV_PORT)
+  if (udpHeader.GetDestinationPort () != aodv::RoutingProtocol::AODV_PORT)
     {
       return false;
     }
 
-  TypeHeader tHeader;
+  aodv::TypeHeader tHeader;
   copyPacket->RemoveHeader (tHeader);
   switch (tHeader.Get ())
     {
-    case AODVTYPE_RREQ:
+    case aodv::AODVTYPE_RREQ:
       {
         NS_LOG_INFO("RREQ captured in Promiscuous callback function");
         aodvTrustEntry.IncRreqCounter ();
         break;
       }
-    case AODVTYPE_RREP:
+    case aodv::AODVTYPE_RREP:
       {
         NS_LOG_INFO("RREP captured in Promiscuous callback function");
         aodvTrustEntry.IncRrepCounter ();
         break;
       }
-    case AODVTYPE_RERR:
+    case aodv::AODVTYPE_RERR:
       {
         NS_LOG_INFO("RERR captured in Promiscuous callback function");
         aodvTrustEntry.IncRerrCounter ();
         break;
       }
-    case AODVTYPE_RREP_ACK:
+    case aodv::AODVTYPE_RREP_ACK:
       {
         NS_LOG_INFO("RREP_ACK captured in Promiscuous callback function");
         break;
@@ -145,13 +145,47 @@ double SimpleAodvTrustManager::CalculateTrust (Address address)
   return trustDouble;
 }
 
-void SimpleAodvTrustManager::AttachPromiscuousCallbackToNode ()
+// Application Methods
+void SimpleAodvTrustManager::StartApplication (void) // Called at time specified by Start
 {
-  Ptr<Node> node = GetObject<Node> ();
-  node->GetDevice (0)->SetPromiscReceiveCallback (ns3::MakeCallback (&SimpleAodvTrustManager::OnReceivePromiscuousCallback,
-                                                                     this));
+  NS_LOG_FUNCTION (this);
+
+  // \todo revise this mechanism
+  // The PromiscReceiveCallback idea is mart, but it's not foolproof.
+  // If the user installs a second TrustManager or anything that uses PromiscReceiveCallback,
+  // then this app will stop working.
+  //
+  // A more reliable way is to use a Ipv4 / Ipv6 Raw socket.
+
+  for (uint32_t index=0; index<m_node->GetNDevices (); index++)
+    {
+      Ptr<NetDevice> device = m_node->GetDevice (index);
+      if (!DynamicCast<LoopbackNetDevice> (device))
+        {
+          device->SetPromiscReceiveCallback (ns3::MakeCallback (&SimpleAodvTrustManager::OnReceivePromiscuousCallback, this));
+        }
+    }
 }
 
+void SimpleAodvTrustManager::StopApplication (void) // Called at time specified by Start
+{
+  NS_LOG_FUNCTION (this);
+
+  for (uint32_t index=0; index<m_node->GetNDevices (); index++)
+    {
+      Ptr<NetDevice> device = m_node->GetDevice (index);
+      if (!DynamicCast<LoopbackNetDevice> (device))
+        {
+          NetDevice::PromiscReceiveCallback cb = ns3::MakeNullCallback< bool,
+                                                                        Ptr<NetDevice>,
+                                                                        Ptr<const Packet>,
+                                                                        uint16_t,
+                                                                        const Address &,
+                                                                        const Address &,
+                                                                        enum NetDevice::PacketType > ();
+          device->SetPromiscReceiveCallback (cb);
+        }
+    }
 }
 
 }
