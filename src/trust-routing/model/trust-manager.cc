@@ -35,7 +35,11 @@ TrustManager::~TrustManager ()
 
 TypeId TrustManager::GetTypeId (void)
 {
-  static TypeId tid = TypeId ("ns3::TrustManager").SetParent<Object> ().SetGroupName ("Trust").AddConstructor<TrustManager> ();
+  static TypeId tid = TypeId ("ns3::TrustManager")
+    .SetParent<Application> ()
+    .SetGroupName ("Trust")
+    .AddConstructor<TrustManager> ()
+  ;
   return tid;
 }
 

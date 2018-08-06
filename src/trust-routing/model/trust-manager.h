@@ -21,14 +21,14 @@
 #ifndef TRUSTHANDLER_H_
 #define TRUSTHANDLER_H_
 
-#include "ns3/object.h"
+#include "ns3/application.h"
 #include "ns3/node.h"
 #include "ns3/address.h"
 #include "trust-table.h"
 
 namespace ns3 {
 
-class TrustManager : public Object
+class TrustManager : public Application
 {
 
   /**
