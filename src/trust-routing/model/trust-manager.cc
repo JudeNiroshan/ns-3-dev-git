@@ -43,18 +43,9 @@ TypeId TrustManager::GetTypeId (void)
   return tid;
 }
 
-//void TrustManager::PrintTrustTableAt (Time printTime,
-//                                      Ptr<OutputStreamWrapper> stream,
-//                                      Time::Unit unit)
-//{
-//  Simulator::Schedule (printTime,
-//                       &TrustManager::Print,
-//                       stream);
-//}
-//
-//void TrustManager::Print (Ptr<OutputStreamWrapper> stream)
-//{
-//  m_trustTable.Print (stream);
-//}
+void TrustManager::Print (Ptr<OutputStreamWrapper> stream, Time::Unit unit)
+{
+  m_trustTable.Print (stream);
+}
 
 } // namespace ns3

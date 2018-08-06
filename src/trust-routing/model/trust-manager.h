@@ -18,8 +18,8 @@
  * Author: Jude Niroshan <jude.niroshan11@gmail.com>
  */
 
-#ifndef TRUSTMANAGER_H_
-#define TRUSTMANAGER_H_
+#ifndef TRUST_MANAGER_H
+#define TRUST_MANAGER_H
 
 #include "ns3/application.h"
 #include "ns3/node.h"
@@ -61,18 +61,6 @@ public:
   TrustManager ();
   virtual ~TrustManager ();
 
-
-  /**
-   * \brief prints the trust table at a particular time.
-   * \param printTime the time at which the trust table is supposed to be printed.
-   * \param stream The output stream object to use
-   * \param unit The time unit to be used in the report
-   *
-   * This method calls the Print() method of the TrustManager at the
-   * specified time; the output format is trust table-specific.
-   */
-  // static void PrintTrustTableAt (Time printTime, Ptr<OutputStreamWrapper> stream, Time::Unit unit = Time::S);
-
 #ifdef NOTYET
   /**
    * \brief calculate the trust value for a given IPv4 address host
@@ -87,13 +75,14 @@ private:
   /**
    * \brief prints the trust table
    * \param stream The output stream object to use
+   * \param unit The time unit to be used in the report
    *
    * This method calls the Print() method of the TrustTable at the
    * specified time; the output format is trust table-specific.
    */
-  // static void Print (Ptr<OutputStreamWrapper> stream);
+   void Print (Ptr<OutputStreamWrapper> stream, Time::Unit unit = Time::S);
 };
 
 } // namespace ns3
 
-#endif
+#endif /* TRUST_MANAGER_H */
