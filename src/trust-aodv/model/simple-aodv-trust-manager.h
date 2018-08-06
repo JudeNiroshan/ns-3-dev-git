@@ -43,9 +43,14 @@ namespace aodv {
  * \ingroup trust-aodv
  * \brief This is a demonstration of aodv protocol has been transformed
  * into a trust based version. This has provided a simplest version of
- * trust handling implementations for promiscuous callback function
+ * trust handling implementation for promiscuous callback function
  * and trust value calculation. This includes user specific implementations
  * that will be used through the trust framework.
+ *
+ * This trust manager calculates a trust value for each known node in the network
+ * based on the ratio of observed RREP to observed RREQ sent by that node.
+ * The trust value is then used to select the route, which has the highest trust
+ * value when there are multiple possible paths to the same destination.
  */
 class SimpleAodvTrustManager : public TrustManager
 {
