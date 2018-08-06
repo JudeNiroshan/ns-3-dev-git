@@ -269,6 +269,13 @@ RoutingProtocol::MaliciousRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Ad
   // here we forge the hop count
   rrepHeader.SetHopCount (1);
 
+  // selfish node behaviour
+  // - randomly decide to swallow the RREP response
+  if (std::rand()%5 != 0)
+    {
+      return;
+    }
+
   packet->AddHeader (rrepHeader);
   aodv::TypeHeader tHeader (aodv::AODVTYPE_RREP);
   packet->AddHeader (tHeader);
