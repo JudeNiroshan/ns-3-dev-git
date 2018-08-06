@@ -116,7 +116,7 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
     }
 
   m_trustParameters[ipv4Address] = aodvTrustEntry;
-  double calculatedTrust = this->calculateTrust (ipv4Address);
+  double calculatedTrust = this->CalculateTrust (ipv4Address);
 
   m_trustTable.AddOrUpdateTrustTableEntry (ipv4Address,
                                            calculatedTrust);
@@ -124,7 +124,7 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
   return true;
 }
 
-double SimpleAodvTrustManager::calculateTrust (Address address)
+double SimpleAodvTrustManager::CalculateTrust (Address address)
 {
   Ipv4Address ipv4Address = Ipv4Address::ConvertFrom (address);
   std::map<Ipv4Address, AodvTrustEntry>::iterator i = m_trustParameters.find (ipv4Address);

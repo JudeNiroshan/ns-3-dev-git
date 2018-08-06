@@ -79,7 +79,7 @@ public:
    * \param [in] address target node IPv4 address to calculate the trust
    * \returns double trust value
    */
-  double calculateTrust (Address ipv4Address);
+  double CalculateTrust (Address ipv4Address);
 
   /**
    * \brief Hook the promiscuous callback to the aggregated

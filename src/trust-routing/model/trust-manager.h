@@ -68,7 +68,7 @@ public:
    * \param address Address instance of target node
    * \Return double type of trust value
    */
-  virtual double calculateTrust (Address ipv4Address) = 0;
+  virtual double CalculateTrust (Address ipv4Address) = 0;
 #endif
 
 private:
