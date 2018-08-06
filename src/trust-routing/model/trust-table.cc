@@ -115,6 +115,16 @@ bool TrustTable::AddOrUpdateTrustTableEntry (Address dst,
     }
 }
 
+void TrustTable::Print (Ptr<OutputStreamWrapper> stream) const
+{
+  *stream->GetStream () << "\nAODV Routing table\n" << "Destination\tTrust Value\t\tTimeStamp\n";
+  for (std::map<Address, TrustEntry>::const_iterator i = m_tableRecords.begin (); i != m_tableRecords.end (); ++i)
+    {
+      i->second.Print (stream);
+    }
+  *stream->GetStream () << "\n";
+}
+
 TrustTable::~TrustTable ()
 {
 }

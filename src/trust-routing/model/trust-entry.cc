@@ -23,21 +23,21 @@
 
 namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE ("TrustEntry");
+NS_LOG_COMPONENT_DEFINE("TrustEntry");
 
 TrustEntry::TrustEntry ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION(this);
 }
 
 TrustEntry::~TrustEntry ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION(this);
 }
 
 TrustEntry::TrustEntry (Address dst,
-              double trust,
-              Time timestamp)
+                        double trust,
+                        Time timestamp)
 {
   m_address = dst;
   m_trustValue = trust;
@@ -46,7 +46,7 @@ TrustEntry::TrustEntry (Address dst,
 
 Address TrustEntry::GetAddress (void) const
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION(this);
   return m_address;
 }
 
@@ -73,6 +73,13 @@ double TrustEntry::GetTrustValue (void) const
 void TrustEntry::SetTrustValue (double trustValue)
 {
   m_trustValue = trustValue;
+}
+
+void TrustEntry::Print (Ptr<OutputStreamWrapper> stream) const
+{
+  std::ostream* os = stream->GetStream ();
+  *os << m_address << "\t" << m_trustValue << "\t" << m_timestamp;
+  *os << "\n";
 }
 
 } // namespace ns3

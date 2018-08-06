@@ -23,6 +23,7 @@
 
 #include "ns3/address.h"
 #include "ns3/nstime.h"
+#include "ns3/output-stream-wrapper.h"
 
 namespace ns3 {
 
@@ -87,6 +88,12 @@ public:
    * \param [in] trustValue trust value
    */
   void SetTrustValue (double trustValue);
+
+  /**
+   * Print trust entry to output stream
+   * \param stream The output stream
+   */
+  void Print (Ptr<OutputStreamWrapper> stream) const;
 private:
   // Address of a node in the network
   Address m_address;

@@ -61,6 +61,18 @@ public:
   TrustManager ();
   virtual ~TrustManager ();
 
+
+  /**
+   * \brief prints the trust table at a particular time.
+   * \param printTime the time at which the trust table is supposed to be printed.
+   * \param stream The output stream object to use
+   * \param unit The time unit to be used in the report
+   *
+   * This method calls the Print() method of the TrustManager at the
+   * specified time; the output format is trust table-specific.
+   */
+  static void PrintTrustTableAt (Time printTime, Ptr<OutputStreamWrapper> stream, Time::Unit unit = Time::S);
+
 #ifdef NOTYET
   /**
    * \brief calculate the trust value for a given IPv4 address host
@@ -71,6 +83,15 @@ public:
   virtual double calculateTrust (Address ipv4Address) = 0;
 #endif
 
+private:
+  /**
+   * \brief prints the trust table
+   * \param stream The output stream object to use
+   *
+   * This method calls the Print() method of the TrustTable at the
+   * specified time; the output format is trust table-specific.
+   */
+  static void Print (Ptr<OutputStreamWrapper> stream);
 };
 
 } // namespace ns3

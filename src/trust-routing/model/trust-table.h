@@ -23,6 +23,7 @@
 
 #include "trust-entry.h"
 #include "ns3/address.h"
+#include "ns3/output-stream-wrapper.h"
 #include <map>
 
 namespace ns3 {
@@ -59,7 +60,8 @@ public:
    * \param [in] trustValue new trust value that needs to be inserted in the trust table
    * \Returns bool boolean value whether add record operation was successful or not
    */
-  bool AddRecord (Address address, double trustValue);
+  bool AddRecord (Address address,
+                  double trustValue);
 
   /**
    * \brief Remove a record from the Trust Table
@@ -74,7 +76,8 @@ public:
    * \param [in] trustValue new trust value that needs to be updated in the trust table
    * \Returns bool boolean value whether update record operation was successful or not
    */
-  bool UpdateRecord (Address address, double trustValue);
+  bool UpdateRecord (Address address,
+                     double trustValue);
 
   /**
    * Lookup trust table entry with destination address dst
@@ -95,6 +98,12 @@ public:
    */
   bool AddOrUpdateTrustTableEntry (Address dst,
                                    double trustValue);
+
+  /**
+   * Print trust table
+   * \param stream the output stream
+   */
+  void Print (Ptr<OutputStreamWrapper> stream) const;
 };
 
 } // namespace ns3

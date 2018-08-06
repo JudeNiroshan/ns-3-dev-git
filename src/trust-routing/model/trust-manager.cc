@@ -22,7 +22,7 @@
 
 namespace ns3 {
 
-NS_OBJECT_ENSURE_REGISTERED (TrustManager);
+NS_OBJECT_ENSURE_REGISTERED(TrustManager);
 
 TrustManager::TrustManager ()
 {
@@ -32,14 +32,24 @@ TrustManager::~TrustManager ()
 {
 }
 
-TypeId
-TrustManager::GetTypeId (void)
+TypeId TrustManager::GetTypeId (void)
 {
-  static TypeId tid = TypeId ("ns3::TrustManager")
-    .SetParent<Object> ()
-    .SetGroupName("Trust")
-    .AddConstructor<TrustManager> ()
-  ;
+  static TypeId tid = TypeId ("ns3::TrustManager").SetParent<Object> ().SetGroupName ("Trust").AddConstructor<TrustManager> ();
   return tid;
 }
+
+void TrustManager::PrintTrustTableAt (Time printTime,
+                                      Ptr<OutputStreamWrapper> stream,
+                                      Time::Unit unit)
+{
+  Simulator::Schedule (printTime,
+                       &TrustManager::Print,
+                       stream);
+}
+
+void TrustManager::Print (Ptr<OutputStreamWrapper> stream)
+{
+  m_trustTable.Print (stream);
+}
+
 } // namespace ns3
