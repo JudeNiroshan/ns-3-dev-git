@@ -7,6 +7,7 @@ def build(bld):
         'model/aodv-trust-entry.cc',
         'model/simple-aodv-trust-manager.cc',
         'model/malicious-aodv-routing-protocol.cc',
+        'model/selfish-aodv-routing-protocol.cc',
         'helper/malicious-aodv-helper.cc',
         ]
 
@@ -16,5 +17,6 @@ def build(bld):
         'model/aodv-trust-entry.h',
         'model/simple-aodv-trust-manager.h',
         'model/malicious-aodv-routing-protocol.h',
+        'model/selfish-aodv-routing-protocol.h',
         'helper/malicious-aodv-helper.h',
         ]

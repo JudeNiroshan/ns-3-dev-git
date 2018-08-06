@@ -18,18 +18,18 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#ifndef MALICIOUS_AODV_ROUTING_PROTOCOL_H
-#define MALICIOUS_AODV_ROUTING_PROTOCOL_H
+#ifndef SELFISH_AODV_ROUTING_PROTOCOL_H
+#define SELFISH_AODV_ROUTING_PROTOCOL_H
 
 #include "ns3/aodv-routing-protocol.h"
 
 namespace ns3 {
-namespace maliciousaodv {
+namespace selfishaodv {
 
 /**
  * \ingroup aodv
  *
- * \brief Malicious AODV routing protocol
+ * \brief Selfish AODV routing protocol
  */
 class RoutingProtocol : public aodv::RoutingProtocol
 {
@@ -46,6 +46,10 @@ public:
   virtual ~RoutingProtocol ();
   virtual void DoDispose ();
 
+  virtual bool RouteInput (Ptr<const Packet> p, const Ipv4Header &header, Ptr<const NetDevice> idev,
+                           UnicastForwardCallback ucb, MulticastForwardCallback mcb,
+                           LocalDeliverCallback lcb, ErrorCallback ecb);
+
 protected:
   virtual void DoInitialize (void);
 
@@ -54,14 +58,18 @@ protected:
   /// Receive and process control packet
   virtual void RecvAodv (Ptr<Socket> socket);
   /// Receive RREP, but forwards a forget RREP with hop count equal to 1
-  void MaliciousRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address sender);
+  void SelfishRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address sender);
 
+private:
+  double m_rrepDropProbability; //!< Probability to drop a RREP to be forwarded
+  double m_rreqDropProbability; //!< Probability to drop a RREQ to be forwarded
+  double m_dataDropProbability; //!< Probability to drop a data packet to be forwarded
   //\}
 
   /// @}
 };
 
-} //namespace aodv
+} //namespace selfishaodv
 } //namespace ns3
 
-#endif /* MALICIOUS_AODV_ROUTING_PROTOCOL_H */
+#endif /* SELFISH_AODV_ROUTING_PROTOCOL_H */

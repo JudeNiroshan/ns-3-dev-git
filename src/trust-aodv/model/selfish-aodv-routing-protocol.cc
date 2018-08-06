@@ -18,14 +18,15 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#include "malicious-aodv-routing-protocol.h"
+#include "selfish-aodv-routing-protocol.h"
 #include "ns3/log.h"
+#include "ns3/double.h"
 
 namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE ("MaliciousAodvRoutingProtocol");
+NS_LOG_COMPONENT_DEFINE ("SelfishAodvRoutingProtocol");
 
-namespace maliciousaodv {
+namespace selfishaodv {
 NS_OBJECT_ENSURE_REGISTERED (RoutingProtocol);
 
 /// UDP Port for AODV control traffic
@@ -40,10 +41,22 @@ RoutingProtocol::RoutingProtocol ()
 TypeId
 RoutingProtocol::GetTypeId (void)
 {
-  static TypeId tid = TypeId ("ns3::maliciousaodv::RoutingProtocol")
+  static TypeId tid = TypeId ("ns3::selfishaodv::RoutingProtocol")
     .SetParent<aodv::RoutingProtocol> ()
     .SetGroupName ("Aodv")
     .AddConstructor<RoutingProtocol> ()
+    .AddAttribute ("RreqDropProbability", "RREQ drop probability.",
+                   DoubleValue (10.0),
+                   MakeDoubleAccessor (&RoutingProtocol::m_rreqDropProbability),
+                   MakeDoubleChecker<double> (0.0,100.0))
+    .AddAttribute ("RrepDropProbability", "RREQ drop probability.",
+                   DoubleValue (10.0),
+                   MakeDoubleAccessor (&RoutingProtocol::m_rrepDropProbability),
+                   MakeDoubleChecker<double> (0.0,100.0))
+    .AddAttribute ("DataDropProbability", "Data packet drop probability.",
+                   DoubleValue (10.0),
+                   MakeDoubleAccessor (&RoutingProtocol::m_dataDropProbability),
+                   MakeDoubleChecker<double> (0.0,100.0))
   ;
   return tid;
 }
@@ -96,12 +109,26 @@ RoutingProtocol::RecvAodv (Ptr<Socket> socket)
     {
     case aodv::AODVTYPE_RREQ:
       {
-        RecvRequest (packet, receiver, sender);
+        aodv::RreqHeader rreqHeader;
+        packet->PeekHeader (rreqHeader);
+        if (IsMyOwnAddress (rreqHeader.GetDst ()))
+          {
+            RecvRequest (packet, receiver, sender);
+          }
+        // selfish behaviour
+        else if (m_uniformRandomVariable->GetValue (0,100) > m_rreqDropProbability)
+          {
+            RecvRequest (packet, receiver, sender);
+          }
+        else
+          {
+            NS_LOG_LOGIC ("Selfish behaviour, dropping a RREQ");
+          }
         break;
       }
     case aodv::AODVTYPE_RREP:
       {
-        MaliciousRecvReply (packet, receiver, sender);
+        SelfishRecvReply (packet, receiver, sender);
         break;
       }
     case aodv::AODVTYPE_RERR:
@@ -125,7 +152,7 @@ RoutingProtocol::DoInitialize (void)
 }
 
 void
-RoutingProtocol::MaliciousRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address sender)
+RoutingProtocol::SelfishRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address sender)
 {
   NS_LOG_FUNCTION (this << " src " << sender);
   aodv::RrepHeader rrepHeader;
@@ -213,6 +240,14 @@ RoutingProtocol::MaliciousRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Ad
       return;
     }
 
+  // selfish behaviour
+  if (m_uniformRandomVariable->GetValue (0,100) < m_rrepDropProbability)
+    {
+      NS_LOG_LOGIC ("Selfish behaviour, dropping a RREP");
+      return;
+    }
+
+
   aodv::RoutingTableEntry toOrigin;
   if (!m_routingTable.LookupRoute (rrepHeader.GetOrigin (), toOrigin) || toOrigin.GetFlag () == aodv::IN_SEARCH)
     {
@@ -252,10 +287,6 @@ RoutingProtocol::MaliciousRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Ad
   SocketIpTtlTag ttl;
   ttl.SetTtl (tag.GetTtl () - 1);
   packet->AddPacketTag (ttl);
-
-  // here we forge the hop count
-  rrepHeader.SetHopCount (1);
-
   packet->AddHeader (rrepHeader);
   aodv::TypeHeader tHeader (aodv::AODVTYPE_RREP);
   packet->AddHeader (tHeader);
@@ -264,5 +295,29 @@ RoutingProtocol::MaliciousRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Ad
   socket->SendTo (packet, 0, InetSocketAddress (toOrigin.GetNextHop (), AODV_PORT));
 }
 
-} //namespace maliciousaodv
+bool
+RoutingProtocol::RouteInput (Ptr<const Packet> p, const Ipv4Header &header, Ptr<const NetDevice> idev,
+                             UnicastForwardCallback ucb, MulticastForwardCallback mcb,
+                             LocalDeliverCallback lcb, ErrorCallback ecb)
+{
+  NS_ASSERT (m_ipv4->GetInterfaceForDevice (idev) >= 0);
+  int32_t iif = m_ipv4->GetInterfaceForDevice (idev);
+  bool ret;
+  bool ifaceForwardingState = m_ipv4->IsForwarding (iif);
+
+  // selfish behaviour
+  if (m_uniformRandomVariable->GetValue (0,100) < m_dataDropProbability)
+    {
+      NS_LOG_LOGIC ("Selfish behaviour, dropping a DATA packet");
+      m_ipv4->SetForwarding (iif, false);
+    }
+  ret = aodv::RoutingProtocol::RouteInput (p, header, idev, ucb, mcb, lcb, ecb);
+  m_ipv4->SetForwarding (iif, ifaceForwardingState);
+
+  return ret;
+}
+
+
+
+} //namespace selfishaodv
 } //namespace ns3
