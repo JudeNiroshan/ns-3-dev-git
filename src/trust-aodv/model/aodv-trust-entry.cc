@@ -25,55 +25,79 @@ namespace ns3
 
 AodvTrustEntry::AodvTrustEntry ()
 {
+  m_rreq = 0;
+  m_rrep = 0;
+  m_rerr = 0;
+  m_hello = 0;
 }
 
 AodvTrustEntry::~AodvTrustEntry ()
 {
 }
 
-uint16_t AodvTrustEntry::GetError () const
+uint16_t AodvTrustEntry::GetRerrCounter () const
 {
-  return m_error;
+  return m_rerr;
 }
 
-void AodvTrustEntry::SetError (uint16_t err)
+void AodvTrustEntry::SetRerrCounter (uint16_t err)
 {
-  m_error = err;
+  m_rerr = err;
 }
 
-uint16_t AodvTrustEntry::GetHello () const
+void AodvTrustEntry::IncRerrCounter ()
+{
+  m_rerr++;
+}
+
+uint16_t AodvTrustEntry::GetHelloCounter () const
 {
   return m_hello;
 }
 
-void AodvTrustEntry::SetHello (uint16_t hello)
+void AodvTrustEntry::SetHelloCounter (uint16_t hello)
 {
   m_hello = hello;
 }
 
-uint16_t AodvTrustEntry::GetReply () const
+void AodvTrustEntry::IncHelloCounter ()
 {
-  return m_reply;
+  m_hello++;
 }
 
-void AodvTrustEntry::SetReply (uint16_t rply)
+uint16_t AodvTrustEntry::GetRrepCounter () const
 {
-  m_reply = rply;
+  return m_rrep;
 }
 
-uint16_t AodvTrustEntry::GetRreq () const
+void AodvTrustEntry::SetRrepCounter (uint16_t rply)
+{
+  m_rrep = rply;
+}
+
+void AodvTrustEntry::IncRrepCounter ()
+{
+  m_rrep++;
+}
+
+uint16_t AodvTrustEntry::GetRreqCounter () const
 {
   return m_rreq;
 }
 
-void AodvTrustEntry::SetRreq (uint16_t rreq)
+void AodvTrustEntry::SetRreqCounter (uint16_t rreq)
 {
   m_rreq = rreq;
 }
 
+void AodvTrustEntry::IncRreqCounter ()
+{
+  m_rreq++;
+}
+
 std::ostream &operator<< (std::ostream &os, AodvTrustEntry const &m)
 {
-  os << "rreq=" << m.GetRreq() << "|" << "rrep=" << m.GetReply();
+  os << "rreq=" << m.GetRreqCounter () << " | " << "rrep=" << m.GetRrepCounter ();
   return os;
 }
 

@@ -90,25 +90,24 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
     case AODVTYPE_RREQ:
       {
         NS_LOG_INFO("RREQ captured in Promiscuous callback function");
-        aodvTrustEntry.SetRreq (aodvTrustEntry.GetRreq () + 1);
+        aodvTrustEntry.IncRreqCounter ();
         break;
       }
     case AODVTYPE_RREP:
       {
         NS_LOG_INFO("RREP captured in Promiscuous callback function");
-        aodvTrustEntry.SetReply (aodvTrustEntry.GetReply () + 1);
+        aodvTrustEntry.IncRrepCounter ();
         break;
       }
     case AODVTYPE_RERR:
       {
         NS_LOG_INFO("RERR captured in Promiscuous callback function");
-        aodvTrustEntry.SetError (aodvTrustEntry.GetError () + 1);
+        aodvTrustEntry.IncRerrCounter ();
         break;
       }
     case AODVTYPE_RREP_ACK:
       {
         NS_LOG_INFO("RREP_ACK captured in Promiscuous callback function");
-//        aodvTrustEntry.SetErr(aodvTrustEntry.Get + 1);
         break;
       }
     }
@@ -133,7 +132,7 @@ double SimpleAodvTrustManager::calculateTrust (Address address)
     }
 
   AodvTrustEntry m_aodvTrustEntry = i->second;
-  double trustDouble = m_aodvTrustEntry.GetReply () / m_aodvTrustEntry.GetRreq () * 1.0;
+  double trustDouble = m_aodvTrustEntry.GetRrepCounter () / m_aodvTrustEntry.GetRreqCounter () * 1.0;
 
   return trustDouble;
 }
