@@ -71,7 +71,7 @@ public:
    * This method calls the Print() method of the TrustManager at the
    * specified time; the output format is trust table-specific.
    */
-  static void PrintTrustTableAt (Time printTime, Ptr<OutputStreamWrapper> stream, Time::Unit unit = Time::S);
+  // static void PrintTrustTableAt (Time printTime, Ptr<OutputStreamWrapper> stream, Time::Unit unit = Time::S);
 
 #ifdef NOTYET
   /**
@@ -91,7 +91,7 @@ private:
    * This method calls the Print() method of the TrustTable at the
    * specified time; the output format is trust table-specific.
    */
-  static void Print (Ptr<OutputStreamWrapper> stream);
+  // static void Print (Ptr<OutputStreamWrapper> stream);
 };
 
 } // namespace ns3

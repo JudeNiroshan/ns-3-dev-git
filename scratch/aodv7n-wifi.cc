@@ -300,6 +300,6 @@ AodvExample::InstallTrustFramework ()
       simpleAodvTrustManager->AttachPromiscuousCallbackToNode();
 
       Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> ("trust.routes", std::ios::out);
-      simpleAodvTrustManager.PrintTrustTableAt (Seconds (50), routingStream);
+      // simpleAodvTrustManager.PrintTrustTableAt (Seconds (50), routingStream);
     }
 }
