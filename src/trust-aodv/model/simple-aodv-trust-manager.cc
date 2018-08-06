@@ -135,7 +135,12 @@ double SimpleAodvTrustManager::calculateTrust (Address address)
     }
 
   AodvTrustEntry m_aodvTrustEntry = i->second;
-  double trustDouble = m_aodvTrustEntry.GetRrepCounter () / m_aodvTrustEntry.GetRreqCounter () * 1.0;
+
+  double trustDouble;
+  if (m_aodvTrustEntry.GetRreqCounter ())
+    trustDouble = m_aodvTrustEntry.GetRrepCounter () / m_aodvTrustEntry.GetRreqCounter () * 1.0;
+  else
+    trustDouble = 0;
 
   return trustDouble;
 }
