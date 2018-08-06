@@ -18,8 +18,8 @@
  * Author: Jude Niroshan <jude.niroshan11@gmail.com>
  */
 
-#ifndef TRUSTHANDLER_H_
-#define TRUSTHANDLER_H_
+#ifndef TRUSTMANAGER_H_
+#define TRUSTMANAGER_H_
 
 #include "ns3/application.h"
 #include "ns3/node.h"
