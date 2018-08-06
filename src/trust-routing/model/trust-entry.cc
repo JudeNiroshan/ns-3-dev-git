@@ -19,20 +19,15 @@
  */
 
 #include "trust-entry.h"
-#include "ns3/log.h"
 
 namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE("TrustEntry");
-
 TrustEntry::TrustEntry ()
 {
-  NS_LOG_FUNCTION(this);
 }
 
 TrustEntry::~TrustEntry ()
 {
-  NS_LOG_FUNCTION(this);
 }
 
 TrustEntry::TrustEntry (Address dst,
@@ -46,7 +41,6 @@ TrustEntry::TrustEntry (Address dst,
 
 Address TrustEntry::GetAddress (void) const
 {
-  NS_LOG_FUNCTION(this);
   return m_address;
 }
 
