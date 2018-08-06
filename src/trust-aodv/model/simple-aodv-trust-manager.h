@@ -32,7 +32,7 @@ namespace ns3 {
 namespace aodv {
 
 /**
- * \ingroup internet
+ * \ingroup trust-aodv
  * \defgroup trust Trust management framework.
  *
  * The Trust Management Framework is built-in support to implement custom
@@ -40,7 +40,7 @@ namespace aodv {
  */
 
 /**
- * \ingroup trust
+ * \ingroup trust-aodv
  * \brief The aodv specific trust operations handler
  */
 class SimpleAodvTrustManager : public TrustManager

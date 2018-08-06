@@ -25,7 +25,7 @@
 namespace ns3 {
 
 /**
- * \ingroup aodv-test
+ * \ingroup trust-routing-test
  * \ingroup tests
  *
  * \brief Unit test for trust table
