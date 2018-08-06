@@ -274,7 +274,7 @@ QosTxop::NotifyAccessGranted (void)
           Ptr<const WifiMacQueueItem> item;
           if (m_currentHdr.IsQosData ()
               && (item = m_queue->PeekByTidAndAddress (m_currentHdr.GetQosTid (),
-                                                       WifiMacHeader::ADDR1, m_currentHdr.GetAddr1 ()))
+                                                       m_currentHdr.GetAddr1 ()))
               && !m_currentHdr.GetAddr1 ().IsBroadcast ()
               && m_msduAggregator != 0 && !m_currentHdr.IsRetry ())
             {
@@ -287,7 +287,6 @@ QosTxop::NotifyAccessGranted (void)
               bool aggregated = false;
               bool isAmsdu = false;
               Ptr<const WifiMacQueueItem> peekedItem = m_queue->PeekByTidAndAddress (m_currentHdr.GetQosTid (),
-                                                                                     WifiMacHeader::ADDR1,
                                                                                      m_currentHdr.GetAddr1 ());
               while (peekedItem != 0)
                 {
@@ -305,7 +304,7 @@ QosTxop::NotifyAccessGranted (void)
                       break;
                     }
                   peekedItem = m_queue->PeekByTidAndAddress (m_currentHdr.GetQosTid (),
-                                                             WifiMacHeader::ADDR1, m_currentHdr.GetAddr1 ());
+                                                             m_currentHdr.GetAddr1 ());
                 }
               if (isAmsdu)
                 {
@@ -820,7 +819,6 @@ QosTxop::StartNextPacket (void)
   if (peekedPacket == 0)
     {
       Ptr<const WifiMacQueueItem> peekedItem = m_queue->PeekByTidAndAddress (m_currentHdr.GetQosTid (),
-                                                                             WifiMacHeader::ADDR1,
                                                                              m_currentHdr.GetAddr1 ());
       if (peekedItem)
         {
@@ -855,7 +853,6 @@ QosTxop::StartNextPacket (void)
     {
       NS_LOG_DEBUG ("start next packet");
       Ptr<WifiMacQueueItem> item = m_queue->DequeueByTidAndAddress (m_currentHdr.GetQosTid (),
-                                                                    WifiMacHeader::ADDR1,
                                                                     m_currentHdr.GetAddr1 ());
       NS_ASSERT (item != 0);
       m_currentPacket = item->GetPacket ();
@@ -905,7 +902,6 @@ QosTxop::HasTxop (void) const
     }
 
   Ptr<const WifiMacQueueItem> peekedItem = m_queue->PeekByTidAndAddress (m_currentHdr.GetQosTid (),
-                                                                         WifiMacHeader::ADDR1,
                                                                          m_currentHdr.GetAddr1 ());
   if (peekedItem == 0)
     {
@@ -1302,9 +1298,10 @@ QosTxop::VerifyBlockAck (void)
 bool QosTxop::GetAmpduExist (Mac48Address dest) const
 {
   NS_LOG_FUNCTION (this << dest);
-  if (m_aMpduEnabled.find (dest) != m_aMpduEnabled.end ())
+  auto it = m_aMpduEnabled.find (dest);
+  if (it != m_aMpduEnabled.end ())
     {
-      return m_aMpduEnabled.find (dest)->second;
+      return it->second;
     }
   return false;
 }
@@ -1312,14 +1309,7 @@ bool QosTxop::GetAmpduExist (Mac48Address dest) const
 void QosTxop::SetAmpduExist (Mac48Address dest, bool enableAmpdu)
 {
   NS_LOG_FUNCTION (this << dest << enableAmpdu);
-  if (m_aMpduEnabled.find (dest) != m_aMpduEnabled.end () && m_aMpduEnabled.find (dest)->second != enableAmpdu)
-    {
-      m_aMpduEnabled.erase (m_aMpduEnabled.find (dest));
-    }
-  if (m_aMpduEnabled.find (dest) == m_aMpduEnabled.end ())
-    {
-      m_aMpduEnabled.insert (std::make_pair (dest, enableAmpdu));
-    }
+  m_aMpduEnabled[dest] = enableAmpdu;
 }
 
 void
