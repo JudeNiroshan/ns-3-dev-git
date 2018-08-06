@@ -25,6 +25,7 @@
 #include "ns3/udp-header.h"
 #include "ns3/ipv4-l3-protocol.h"
 #include "ns3/aodv-routing-protocol.h"
+#include "ns3/mac48-address.h"
 #include "ns3/log.h"
 #include "ns3/loopback-net-device.h"
 
@@ -98,6 +99,15 @@ bool SimpleAodvTrustManager::OnReceivePromiscuousCallback (Ptr<NetDevice> device
       }
     case aodv::AODVTYPE_RREP:
       {
+        if (Mac48Address::IsMatchingType (to))
+          {
+            Mac48Address to48Addr = Mac48Address::ConvertFrom (to);
+            if (to48Addr.IsBroadcast ())
+              {
+                // NS_LOG_INFO("RREP skipped because has been broadcasted");
+                break;
+              }
+          }
         NS_LOG_INFO("RREP captured in Promiscuous callback function");
         aodvTrustEntry.IncRrepCounter ();
         break;
