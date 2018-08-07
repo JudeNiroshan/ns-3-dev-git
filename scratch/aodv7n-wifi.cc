@@ -282,12 +282,21 @@ AodvExample::InstallApplications ()
   apps.Start (Seconds (1.0));
   apps.Stop (Seconds (100.0));
 */
-  V4PingHelper ping (interfaces.GetAddress (3));
-  ping.SetAttribute ("Verbose", BooleanValue (true));
+  for (uint32_t i = 0; i < size; i++)
+    {
+      if (i == 3)
+        {
+          continue;
+        }
+      V4PingHelper ping (interfaces.GetAddress ((size - 1) - i));
+      ping.SetAttribute ("Verbose",
+                         BooleanValue (true));
 
-  ApplicationContainer p = ping.Install (nodes.Get (0));
-  p.Start (Seconds (0));
-  p.Stop (Seconds (totalTime) - Seconds (0.001));
+      ApplicationContainer p = ping.Install (nodes.Get (i));
+      p.Start (Seconds (0 + (i * 10)));
+      p.Stop (Seconds (totalTime) - Seconds (0.001));
+
+    }
 }
 
 void
