@@ -24,6 +24,7 @@ namespace ns3 {
 
 TrustEntry::TrustEntry ()
 {
+  m_trustValue = 0;
 }
 
 TrustEntry::~TrustEntry ()

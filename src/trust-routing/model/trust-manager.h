@@ -53,10 +53,8 @@ public:
   TrustManager ();
   virtual ~TrustManager ();
 
-protected:
-
   /**
-   * \brief trust table which holds trust values for directly connected nodes.
+   * \brief trust table which holds trust values for nodes.
    * this will be used for trust framework to transform a protocol into a
    * trust based variation
    */

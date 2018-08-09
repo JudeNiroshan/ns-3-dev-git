@@ -19,6 +19,7 @@
  */
 
 #include "trust-aodv-routing-protocol.h"
+#include "simple-aodv-trust-manager.h"
 #include "ns3/log.h"
 #include "ns3/double.h"
 
@@ -187,6 +188,35 @@ RoutingProtocol::TrustRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Addres
   aodv::RoutingTableEntry toDst;
   if (m_routingTable.LookupRoute (dst, toDst))
     {
+      Ipv4Address actualNextHop = toDst.GetNextHop (); // <- this is the actual next hop
+      Ptr<SimpleAodvTrustManager> app = DynamicCast<SimpleAodvTrustManager> (GetObject<Node> ()->GetApplication (0)); // <! assume there is only 1 trust manager application
+      if (app != 0)
+        {
+          NS_LOG_INFO ("TrustManager application has detected");
+          TrustEntry nextHopTrustEntry;
+          app->m_trustTable.LookupTrustEntry (actualNextHop,
+                                              nextHopTrustEntry);
+          double nextHopTrustValue = nextHopTrustEntry.GetTrustValue ();
+
+          TrustEntry senderTrustEntry;
+          app->m_trustTable.LookupTrustEntry (sender,
+                                              senderTrustEntry);
+          double senderTrustValue = senderTrustEntry.GetTrustValue ();
+          NS_LOG_INFO ("Next hop trust : " <<nextHopTrustValue <<" | sender trust value : " << senderTrustValue);
+
+          if (senderTrustValue < 0.4)
+            {
+              NS_LOG_INFO ("Drop RREP because sender("<< sender <<") is not trust worthy");
+              return;
+            }
+
+          if (nextHopTrustValue < 0.4)
+            {
+              NS_LOG_INFO ("Drop RREP because next hop("<< actualNextHop <<") is not trust worthy");
+              return;
+            }
+        }
+
       /*
        * The existing entry is updated only in the following circumstances:
        * (i) the sequence number in the routing table is marked as invalid in route table entry.
@@ -210,6 +240,7 @@ RoutingProtocol::TrustRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Addres
           // (iv)  the sequence numbers are the same, and the New Hop Count is smaller than the hop count in route table entry.
           else if ((rrepHeader.GetDstSeqno () == toDst.GetSeqNo ()) && (hop < toDst.GetHop ()))
             {
+
               m_routingTable.Update (newEntry);
             }
         }
