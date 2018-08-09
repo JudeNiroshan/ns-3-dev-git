@@ -68,7 +68,7 @@ TrustManagerHelper::Print (Ptr<Node> node, Ptr<OutputStreamWrapper> stream, Time
     {
       Ptr<TrustManager> tm = DynamicCast<TrustManager> (node->GetApplication (index));
       if (tm != 0)
-        tm->PrintTrustTable (stream, unit);
+        tm->Print (stream, unit);
     }
 }
 
@@ -79,7 +79,7 @@ TrustManagerHelper::PrintEvery (Time printInterval, Ptr<Node> node, Ptr<OutputSt
     {
       Ptr<TrustManager> tm = DynamicCast<TrustManager> (node->GetApplication (index));
       if (tm != 0)
-        tm->PrintTrustTable (stream, unit);
+        tm->Print (stream, unit);
     }
   Simulator::Schedule (printInterval, &TrustManagerHelper::PrintEvery, printInterval, node, stream, unit);
 }

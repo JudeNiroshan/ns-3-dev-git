@@ -54,6 +54,16 @@ public:
   virtual ~TrustManager ();
 
   /**
+   * \brief prints the trust table
+   * \param stream The output stream object to use
+   * \param unit The time unit to be used in the report
+   *
+   * This method calls the Print() method of the TrustTable at the
+   * specified time; the output format is trust table-specific.
+   */
+   void Print (Ptr<OutputStreamWrapper> stream, Time::Unit unit = Time::S);
+
+   /**
    * \brief trust table which holds trust values for nodes.
    * this will be used for trust framework to transform a protocol into a
    * trust based variation
@@ -68,16 +78,6 @@ private:
    * \Return double type of trust value
    */
   virtual double CalculateTrust (Address ipv4Address) = 0;
-
-  /**
-   * \brief prints the trust table
-   * \param stream The output stream object to use
-   * \param unit The time unit to be used in the report
-   *
-   * This method calls the Print() method of the TrustTable at the
-   * specified time; the output format is trust table-specific.
-   */
-   void Print (Ptr<OutputStreamWrapper> stream, Time::Unit unit = Time::S);
 };
 
 } // namespace ns3

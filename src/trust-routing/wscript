@@ -12,6 +12,7 @@ def build(bld):
         'model/trust-manager.cc',
         'model/trust-entry.cc',
         'model/trust-table.cc',
+        'helper/trust-manager-helper.cc',
         ]
 
     module_test = bld.create_ns3_module_test_library('trust-routing')
@@ -25,6 +26,7 @@ def build(bld):
         'model/trust-manager.h',
         'model/trust-entry.h',
         'model/trust-table.h',
+        'helper/trust-manager-helper.h',
         ]
 
     if bld.env.ENABLE_EXAMPLES:
