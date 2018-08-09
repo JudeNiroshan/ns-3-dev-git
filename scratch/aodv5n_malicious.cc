@@ -97,8 +97,6 @@ private:
   void InstallInternetStack ();
   /// Create the simulation applications
   void InstallApplications ();
-  /// Enable trust framework for all nodes
-  void InstallTrustFramework ();
 };
 
 int main (int argc, char **argv)
@@ -148,7 +146,6 @@ AodvExample::Run ()
   CreateDevices ();
   InstallInternetStack ();
   InstallApplications ();
-  InstallTrustFramework ();
 
   std::cout << "Starting simulation for " << totalTime << " s ...\n";
 
@@ -246,14 +243,4 @@ AodvExample::InstallApplications ()
   Ptr<Node> node = nodes.Get (size/2);
   Ptr<MobilityModel> mob = node->GetObject<MobilityModel> ();
   Simulator::Schedule (Seconds (totalTime/3), &MobilityModel::SetPosition, mob, Vector (1e5, 1e5, 1e5));
-}
-
-void
-AodvExample::InstallTrustFramework ()
-{
-  for (uint32_t i = 0; i < size; ++i)
-    {
-      Ptr<SimpleAodvTrustManager> simpleAodvTrustManager = CreateObject<SimpleAodvTrustManager>();
-      nodes.Get(i)->AddApplication (simpleAodvTrustManager);
-    }
 }
