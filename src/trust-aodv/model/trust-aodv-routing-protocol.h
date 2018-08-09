@@ -24,6 +24,9 @@
 #include "ns3/aodv-routing-protocol.h"
 
 namespace ns3 {
+
+class TrustManager;
+
 namespace trustaodv {
 
 /**
@@ -46,10 +49,6 @@ public:
   virtual ~RoutingProtocol ();
   virtual void DoDispose ();
 
-  virtual bool RouteInput (Ptr<const Packet> p, const Ipv4Header &header, Ptr<const NetDevice> idev,
-                           UnicastForwardCallback ucb, MulticastForwardCallback mcb,
-                           LocalDeliverCallback lcb, ErrorCallback ecb);
-
 protected:
   virtual void DoInitialize (void);
 
@@ -61,9 +60,6 @@ protected:
   void TrustRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Address sender);
 
 private:
-  double m_rrepDropProbability; //!< Probability to drop a RREP to be forwarded
-  double m_rreqDropProbability; //!< Probability to drop a RREQ to be forwarded
-  double m_dataDropProbability; //!< Probability to drop a data packet to be forwarded
   //\}
 
   /// @}

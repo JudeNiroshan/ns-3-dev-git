@@ -148,9 +148,9 @@ double SimpleAodvTrustManager::CalculateTrust (Address address)
 
   double trustDouble;
   if (m_aodvTrustEntry.GetRreqCounter ())
-    trustDouble = m_aodvTrustEntry.GetRrepCounter () / m_aodvTrustEntry.GetRreqCounter () * 1.0;
+    trustDouble = static_cast<double> (m_aodvTrustEntry.GetRrepCounter ()) / static_cast<double> (m_aodvTrustEntry.GetRreqCounter ());
   else
-    trustDouble = 0;
+    trustDouble = 0.5; // we assume that an unknown node is neither trusted or untrusted.
 
   return trustDouble;
 }

@@ -64,6 +64,21 @@ public:
   void Set (std::string name, const AttributeValue &value);
 
   /**
+   * \param tid the TypeId of the TrustManager to create
+   *
+   * This method controls the type of TrustManager that will be installed in the node.
+   */
+  void SetManagerType (std::string tid);
+
+  /**
+   * \param name the name of the attribute to set
+   * \param value the value of the attribute to set.
+   *
+   * This method controls the attributes of ns3::TrustManager
+   */
+  void SetManagerAttribute (std::string name, const AttributeValue &value);
+
+  /**
    * Assign a fixed random variable stream number to the random variables
    * used by this model.  Return the number of streams (possibly zero) that
    * have been assigned.  The Install() method of the InternetStackHelper
@@ -77,8 +92,11 @@ public:
   int64_t AssignStreams (NodeContainer c, int64_t stream);
 
 private:
-  /** the factory to create AODV routing object */
+  /** Factory to create Trust-based AODV routing object */
   ObjectFactory m_agentFactory;
+  /** Factory to create the Trust Manager */
+  ObjectFactory m_trustManagerFactory;
+
 };
 
 }

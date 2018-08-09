@@ -20,6 +20,7 @@
 
 #include "trust-aodv-helper.h"
 #include "ns3/trust-aodv-routing-protocol.h"
+#include "ns3/trust-manager.h"
 #include "ns3/node-list.h"
 #include "ns3/names.h"
 #include "ns3/ptr.h"
@@ -28,10 +29,11 @@
 namespace ns3
 {
 
-TrustAodvHelper::TrustAodvHelper() :
+TrustAodvHelper::TrustAodvHelper () :
   Ipv4RoutingHelper ()
 {
   m_agentFactory.SetTypeId ("ns3::trustaodv::RoutingProtocol");
+  m_trustManagerFactory.SetTypeId ("ns3::SimpleAodvTrustManager");
 }
 
 TrustAodvHelper*
@@ -43,8 +45,12 @@ TrustAodvHelper::Copy (void) const
 Ptr<Ipv4RoutingProtocol> 
 TrustAodvHelper::Create (Ptr<Node> node) const
 {
-  Ptr<aodv::RoutingProtocol> agent = m_agentFactory.Create<trustaodv::RoutingProtocol> ();
+  Ptr<trustaodv::RoutingProtocol> agent = m_agentFactory.Create<trustaodv::RoutingProtocol> ();
   node->AggregateObject (agent);
+
+  Ptr<Application> trustManager = DynamicCast<Application> (m_trustManagerFactory.Create ());
+  node->AddApplication (trustManager);
+
   return agent;
 }
 
@@ -52,6 +58,18 @@ void
 TrustAodvHelper::Set (std::string name, const AttributeValue &value)
 {
   m_agentFactory.Set (name, value);
+}
+
+void
+TrustAodvHelper::SetManagerType (std::string tid)
+{
+  m_trustManagerFactory.SetTypeId (tid);
+}
+
+void
+TrustAodvHelper::SetManagerAttribute (std::string name, const AttributeValue &value)
+{
+  m_trustManagerFactory.Set (name, value);
 }
 
 int64_t
