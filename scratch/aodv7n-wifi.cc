@@ -35,6 +35,7 @@
 #include "ns3/csma-helper.h"
 #include "ns3/trust-aodv-module.h"
 #include "ns3/trust-manager-helper.h"
+
 using namespace ns3;
 using namespace aodv;
 
@@ -240,7 +241,7 @@ AodvExample::InstallInternetStack ()
   NodeContainer maliciousNodes;
   maliciousNodes.Add (nodes.Get(6));
 
-  AodvHelper aodv;
+  TrustAodvHelper aodv;
   // you can configure AODV attributes here using aodv.Set(name, value)
   InternetStackHelper stack;
   stack.SetRoutingHelper (aodv); // has effect on the next Install ()
@@ -291,7 +292,7 @@ AodvExample::InstallApplications ()
         }
       V4PingHelper ping (interfaces.GetAddress ((size - 1) - i));
       ping.SetAttribute ("Verbose",
-                         BooleanValue (true));
+                         BooleanValue (false));
 
       ApplicationContainer p = ping.Install (nodes.Get (i));
       p.Start (Seconds (0 + (i * 10)));

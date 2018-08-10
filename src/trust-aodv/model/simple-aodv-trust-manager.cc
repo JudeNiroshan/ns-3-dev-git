@@ -37,7 +37,7 @@ NS_OBJECT_ENSURE_REGISTERED(SimpleAodvTrustManager);
 
 TypeId SimpleAodvTrustManager::GetTypeId (void)
 {
-  static TypeId tid = TypeId ("ns3::aodv::SimpleAodvTrustManager")
+  static TypeId tid = TypeId ("ns3::SimpleAodvTrustManager")
     .SetParent<TrustManager> ()
     .SetGroupName ("Aodv")
     .AddConstructor<SimpleAodvTrustManager> ()

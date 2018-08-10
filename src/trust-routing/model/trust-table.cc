@@ -79,17 +79,14 @@ bool TrustTable::LookupTrustEntry (Address dst,
 {
   if (m_tableRecords.empty ())
     {
-      std::cout << "Trust entry to " << dst << " not found; trust table is empty";
       return false;
     }
   std::map<Address, TrustEntry>::const_iterator i = m_tableRecords.find (dst);
   if (i == m_tableRecords.end ())
     {
-      std::cout << "Trust entry to " << dst << " not found";
       return false;
     }
   tt = i->second;
-  std::cout << "Trust entry to " << dst << " found";
   return true;
 }
 
@@ -117,7 +114,7 @@ bool TrustTable::AddOrUpdateTrustTableEntry (Address dst,
 
 void TrustTable::Print (Ptr<OutputStreamWrapper> stream) const
 {
-  *stream->GetStream () << "\nAODV Routing table\n" << "Destination\tTrust Value\t\tTimeStamp\n";
+  *stream->GetStream () << "\nAODV Trust table\n" << "Neighbor\tTrust Value\t\tTimeStamp\n";
   for (std::map<Address, TrustEntry>::const_iterator i = m_tableRecords.begin (); i != m_tableRecords.end (); ++i)
     {
       i->second.Print (stream);

@@ -44,7 +44,6 @@ TypeId TrustManager::GetTypeId (void)
 
 void TrustManager::Print (Ptr<OutputStreamWrapper> stream, Time::Unit unit)
 {
-  std::cout<<"JUDE ADDED trust table print requested!!!"<<std::endl;
   m_trustTable.Print (stream);
 }
 
