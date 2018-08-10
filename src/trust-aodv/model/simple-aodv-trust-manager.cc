@@ -173,6 +173,7 @@ void SimpleAodvTrustManager::StartApplication (void) // Called at time specified
       if (!DynamicCast<LoopbackNetDevice> (device))
         {
           device->SetPromiscReceiveCallback (ns3::MakeCallback (&SimpleAodvTrustManager::OnReceivePromiscuousCallback, this));
+          m_trustTable.Purge (); // TODO make to run repititively with a given time interval
         }
     }
 }
@@ -194,6 +195,7 @@ void SimpleAodvTrustManager::StopApplication (void) // Called at time specified 
                                                                         const Address &,
                                                                         enum NetDevice::PacketType > ();
           device->SetPromiscReceiveCallback (cb);
+          m_trustTable.Purge ();
         }
     }
 }

@@ -51,6 +51,12 @@ private:
   std::map<Address, TrustEntry> m_tableRecords;
 
 public:
+
+  /**
+  * \brief Expiration or deletion time of the trust entry
+  */
+  Time m_lifeTime;
+
   TrustTable ();
   virtual ~TrustTable ();
 
@@ -100,10 +106,16 @@ public:
                                    double trustValue);
 
   /**
-   * Print trust table
+   * \brief Print trust table
    * \param stream the output stream
    */
   void Print (Ptr<OutputStreamWrapper> stream) const;
+
+  /**
+   * \brief Delete all outdated entries and invalidate valid entry if Lifetime
+   *  is expired
+   */
+  void Purge ();
 };
 
 } // namespace ns3

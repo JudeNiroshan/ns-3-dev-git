@@ -125,6 +125,21 @@ void TrustTable::Print (Ptr<OutputStreamWrapper> stream) const
   *stream->GetStream () << "\n";
 }
 
+
+void TrustTable::Purge ()
+{
+  for (std::map<Address, TrustEntry>::iterator i = m_tableRecords.begin (); i != m_tableRecords.end ();)
+    {
+      if (Simulator::Now () - i->second.GetTimestamp () > m_lifeTime)
+        {
+          std::map<Address, TrustEntry>::iterator tmp = i;
+          ++i;
+          m_tableRecords.erase (tmp);
+        }
+    }
+}
+
+
 TrustTable::~TrustTable ()
 {
 }

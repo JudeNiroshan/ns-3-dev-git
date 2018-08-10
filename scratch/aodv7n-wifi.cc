@@ -34,7 +34,7 @@
 #include "ns3/on-off-helper.h"
 #include "ns3/csma-helper.h"
 #include "ns3/trust-aodv-module.h"
-
+#include "ns3/trust-manager-helper.h"
 using namespace ns3;
 using namespace aodv;
 
@@ -258,6 +258,10 @@ AodvExample::InstallInternetStack ()
     {
       Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> ("aodv.routes", std::ios::out);
       aodv.PrintRoutingTableAllAt (Seconds (8), routingStream);
+
+      TrustManagerHelper trustManagerHelper;
+      Ptr<OutputStreamWrapper> trustRoutingStream = Create<OutputStreamWrapper> ("trust.routes", std::ios::out);
+      trustManagerHelper.PrintTrustTableAllAt (Seconds (80), trustRoutingStream);
     }
 }
 

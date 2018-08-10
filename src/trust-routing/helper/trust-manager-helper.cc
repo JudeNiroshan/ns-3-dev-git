@@ -64,11 +64,15 @@ TrustManagerHelper::PrintTrustTableEvery (Time printInterval, Ptr<Node> node, Pt
 void
 TrustManagerHelper::Print (Ptr<Node> node, Ptr<OutputStreamWrapper> stream, Time::Unit unit)
 {
+
   for (uint32_t index = 0; index < node->GetNApplications (); index++)
     {
       Ptr<TrustManager> tm = DynamicCast<TrustManager> (node->GetApplication (index));
       if (tm != 0)
-        tm->Print (stream, unit);
+        {
+          std::cout << "JUDE ADDED inside Print method in trust helper" << std::endl;
+          tm->Print (stream, unit);
+        }
     }
 }
 
