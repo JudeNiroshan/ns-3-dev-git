@@ -144,7 +144,7 @@ RoutingProtocol::TrustRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Addres
     }
   else
     {
-      // We don't know any next hop for that destination yet, we need to trust this one.
+      // We don't know any next hop for that destination yet, we need to accept this one.
       RecvReply (p, receiver, sender);
       return;
     }
@@ -187,10 +187,36 @@ RoutingProtocol::TrustRecvReply (Ptr<Packet> p, Ipv4Address receiver, Ipv4Addres
       oldNodeAvgTrustValue = oldNodeTrustValueSum / oldNodeTrustManagersNum;
     }
 
-  if (newNodeAvgTrustValue >= 0.5 ||
-      newNodeAvgTrustValue > oldNodeAvgTrustValue)
+  // We have 4 cases:
+  // 1) both next hops are above threshold.
+  // 2) The old one is below, and the new one is above
+  // 3) The old one is above, and the new one is below
+  // 4) both are below.
+  // The result is:
+  // 1 - Let the hop number decide
+  // 2 - discard the old one
+  // 3 - discard the new one
+  // 4 - choose the one with highest trust
+
+  // Case 1
+  if ((oldNodeAvgTrustValue >= 0.5) && (newNodeAvgTrustValue >= 0.5))
     {
       RecvReply (p, receiver, sender);
+    }
+  // Case 2
+  else if ((oldNodeAvgTrustValue < 0.5) && (newNodeAvgTrustValue >= 0.5))
+    {
+      m_routingTable.DeleteRoute (dst);
+      RecvReply (p, receiver, sender);
+    }
+  // Case 4
+  else if ((oldNodeAvgTrustValue < 0.5) && (newNodeAvgTrustValue < 0.5))
+    {
+      if (newNodeAvgTrustValue > oldNodeAvgTrustValue)
+        {
+          m_routingTable.DeleteRoute (dst);
+          RecvReply (p, receiver, sender);
+        }
     }
   return;
 }
