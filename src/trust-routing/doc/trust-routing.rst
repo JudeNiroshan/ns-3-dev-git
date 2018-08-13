@@ -1,4 +1,4 @@
-
+.. include:: replace.txt
 
 Trust-based routing protocols framework
 ---------------------------------------

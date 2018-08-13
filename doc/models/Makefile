@@ -89,6 +89,8 @@ SOURCES = \
 	$(SRC)/traffic-control/doc/fq-codel.rst \
 	$(SRC)/traffic-control/doc/pie.rst \
 	$(SRC)/traffic-control/doc/mq.rst \
+	$(SRC)/trust-aodv/doc/trust-aodv.rst \
+	$(SRC)/trust-routing/doc/trust-routing.rst \
 	$(SRC)/spectrum/doc/spectrum.rst \
 	$(SRC)/netanim/doc/animation.rst \
 	$(SRC)/flow-monitor/doc/flow-monitor.rst \

@@ -1,6 +1,6 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
- * Copyright (c) 2009 IITP RAS
+ * Copyright (c) 2018 Sri Lanka Institute of Information Technology
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -15,9 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * This is an example script for AODV manet routing protocol. 
- *
- * Authors: Pavel Boyko <boyko@iitp.ru>
+ * Author: Jude Niroshan <jude.niroshan11@gmail.com>
  */
 
 #include <iostream>
@@ -40,11 +38,12 @@ using namespace ns3;
 using namespace aodv;
 
 /**
- * \ingroup aodv-examples
+ * \ingroup trust-aodv-examples
  * \ingroup examples
  * \brief Test script.
  * 
- * This is non-linear simulation of 5 nodes with static positions
+ * This is non-linear simulation of 7 nodes with static positions
+ * which uses a malicious node and trust based routing protocol
  */
 class AodvExample 
 {
@@ -119,8 +118,6 @@ AodvExample::AodvExample () :
 bool
 AodvExample::Configure (int argc, char **argv)
 {
-  // Enable AODV logs by default. Comment this if too noisy
-  // LogComponentEnable("AodvRoutingProtocol", LOG_LEVEL_ALL);
 
   bool verbose = false;
 
@@ -146,27 +143,14 @@ AodvExample::Configure (int argc, char **argv)
 void
 AodvExample::Run ()
 {
-//  Config::SetDefault ("ns3::WifiRemoteStationManager::RtsCtsThreshold", UintegerValue (1)); // enable rts cts all the time.
   CreateNodes ();
   CreateDevices ();
   InstallInternetStack ();
   InstallApplications ();
 
-  std::cout << "Starting simulation for " << totalTime << " s ...\n";
-
   Simulator::Stop (Seconds (totalTime));
 
-  AnimationInterface anim ("aodv7n.xml"); // Mandatory
-//  AnimationInterface::SetConstantPosition (nodes.Get (0), 0, 40000);
-//  AnimationInterface::SetConstantPosition (nodes.Get (1), 20000, 30000);
-//  AnimationInterface::SetConstantPosition (nodes.Get (2), 20000, 50000);
-//  AnimationInterface::SetConstantPosition (nodes.Get (3), 50000, 40000);
-//  AnimationInterface::SetConstantPosition (nodes.Get (4), 40000, 35000);
-//  anim.UpdateNodeSize (0, 5000, 5000);
-//  anim.UpdateNodeSize (1, 5000, 5000);
-//  anim.UpdateNodeSize (2, 5000, 5000);
-//  anim.UpdateNodeSize (3, 5000, 5000);
-//  anim.UpdateNodeSize (4, 5000, 5000);
+  AnimationInterface anim ("aodv7n.xml");
   anim.EnablePacketMetadata(true);
 
   Simulator::Run ();
@@ -257,18 +241,18 @@ AodvExample::InstallInternetStack ()
 
   if (printRoutes)
     {
-      Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> ("aodv_55.routes", std::ios::out);
+      Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper> ("trust-aodv_routing_table_at_55.routes", std::ios::out);
       aodv.PrintRoutingTableAllAt (Seconds (55), routingStream);
 
       TrustManagerHelper trustManagerHelper;
-      Ptr<OutputStreamWrapper> trustRoutingStream = Create<OutputStreamWrapper> ("trust_55.routes", std::ios::out);
+      Ptr<OutputStreamWrapper> trustRoutingStream = Create<OutputStreamWrapper> ("trust-aodv_trust_table_at_55.routes", std::ios::out);
       trustManagerHelper.PrintTrustTableAllAt (Seconds (55), trustRoutingStream);
 
-      Ptr<OutputStreamWrapper> routingStream3 = Create<OutputStreamWrapper> ("aodv_75.routes", std::ios::out);
+      Ptr<OutputStreamWrapper> routingStream3 = Create<OutputStreamWrapper> ("trust-aodv_routing_table_at_75.routes", std::ios::out);
       aodv.PrintRoutingTableAllAt (Seconds (75), routingStream3);
 
       TrustManagerHelper trustManagerHelper3;
-      Ptr<OutputStreamWrapper> trustRoutingStream3 = Create<OutputStreamWrapper> ("trust_75.routes", std::ios::out);
+      Ptr<OutputStreamWrapper> trustRoutingStream3 = Create<OutputStreamWrapper> ("trust-aodv_trust_table_at_75.routes", std::ios::out);
       trustManagerHelper3.PrintTrustTableAllAt (Seconds (75), trustRoutingStream3);
     }
 }
@@ -277,26 +261,12 @@ void
 AodvExample::InstallApplications ()
 {
 
-  // We want to check the route between 0 and 3.
-  // Normally it should pass through node 1 and 2.
-
-
-  /*uint16_t port = 9;   // Discard port (RFC 863)
-
-  OnOffHelper onoff ("ns3::UdpSocketFactory",
-                         InetSocketAddress (interfaces.GetAddress (size - 1), port));
-  onoff.SetConstantRate (DataRate ("448kb/s"));
-
-  ApplicationContainer apps = onoff.Install (nodes.Get (0));
-  apps.Start (Seconds (1.0));
-  apps.Stop (Seconds (100.0));
-*/
   for (uint32_t i = 0; i < size; i++)
     {
 
       for (uint32_t j = 0; j < size; j++)
         {
-          if (i == ((size - 1) - j))
+          if (i == ( (size - 1) - j))
             {
               continue;
             }
@@ -311,12 +281,14 @@ AodvExample::InstallApplications ()
 
     }
 
+  // We want to check the route between 0 and 4.
+  // Normally it should pass through node 1 and 2.
   V4PingHelper ping (interfaces.GetAddress (0));
-        ping.SetAttribute ("Verbose",
-                           BooleanValue (true));
+  ping.SetAttribute ("Verbose",
+                     BooleanValue (true));
 
-        ApplicationContainer p = ping.Install (nodes.Get (4));
-        p.Start (Seconds (60));
-        p.Stop (Seconds (70) - Seconds (0.001));
+  ApplicationContainer p = ping.Install (nodes.Get (4));
+  p.Start (Seconds (60));
+  p.Stop (Seconds (70) - Seconds (0.001));
 }
 
