@@ -71,7 +71,9 @@ to work based on a trust measurement.
 
 The following implementations are subject to debate:
 
-#. Algorithm used to calculate the trust value
+#. Algorithm used to calculate the trust value. Current implementation can result 
+   trust value to increase over the time. In theory, trust value should always 
+   be vary from 0 - 1.
 #. Packets that are being snoofing through promiscuous callback function
 #. Threahold value that used to define a malicious node
 
@@ -117,6 +119,16 @@ our provided example, you can observe the pcap files for node 0 at
 55th and 75th seconds. Routing table and trust table values has been 
 changed over the time while reducing the trust value for the malicious 
 node.
+
+
+Validation
+**********
+
+In general unit tests are yet to be covered the workflows. Therefore, no tests are 
+not available in a test folder for this module. Even though there is an additional 
+``ns3::selfishaodv::RoutingProtocol`` under the model folder, it has not been used 
+in the example simulation. It was an attempt to simulate a selfish node. You can 
+plug it into the provided example and see how it behaves.
 
 
 Examples

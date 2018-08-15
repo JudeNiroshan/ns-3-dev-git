@@ -67,6 +67,9 @@ The following features are not yet implemented:
    responsibility of the framework users to maintain the trust value in this range.
 #. Threshold value for trust value should be used to decide whether a node is 
    malicious or healthy
+#. Trust table values needs to be always sync-up with routing table entries. This 
+   will ensure that there won't be invalid trust entries in the trust table with 
+   compared to routing table.
 
 References
 ==========
