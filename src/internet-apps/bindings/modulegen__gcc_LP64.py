@@ -120,10 +120,6 @@ def register_types(module):
     typehandlers.add_type_alias(u'void ( * ) ( ns3::Mac48Address )&', u'ns3::Mac48Address::TracedCallback&')
     ## mac48-address.h (module 'network'): ns3::Mac48Address [class]
     root_module['ns3::Mac48Address'].implicitly_converts_to(root_module['ns3::Address'])
-    ## mac64-address.h (module 'network'): ns3::Mac64Address [class]
-    module.add_class('Mac64Address', import_from_module='ns.network')
-    ## mac64-address.h (module 'network'): ns3::Mac64Address [class]
-    root_module['ns3::Mac64Address'].implicitly_converts_to(root_module['ns3::Address'])
     ## mac8-address.h (module 'network'): ns3::Mac8Address [class]
     module.add_class('Mac8Address', import_from_module='ns.network')
     ## mac8-address.h (module 'network'): ns3::Mac8Address [class]
@@ -263,6 +259,9 @@ def register_types(module):
     module.add_class('Time', import_from_module='ns.core')
     ## nstime.h (module 'core'): ns3::Time::Unit [enumeration]
     module.add_enum('Unit', ['Y', 'D', 'H', 'MIN', 'S', 'MS', 'US', 'NS', 'PS', 'FS', 'LAST'], outer_class=root_module['ns3::Time'], import_from_module='ns.core')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )', u'ns3::Time::TracedCallback')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )*', u'ns3::Time::TracedCallback*')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )&', u'ns3::Time::TracedCallback&')
     ## nstime.h (module 'core'): ns3::Time [class]
     root_module['ns3::Time'].implicitly_converts_to(root_module['ns3::int64x64_t'])
     ## trace-source-accessor.h (module 'core'): ns3::TraceSourceAccessor [class]
@@ -373,10 +372,6 @@ def register_types(module):
     module.add_class('Mac48AddressChecker', import_from_module='ns.network', parent=root_module['ns3::AttributeChecker'])
     ## mac48-address.h (module 'network'): ns3::Mac48AddressValue [class]
     module.add_class('Mac48AddressValue', import_from_module='ns.network', parent=root_module['ns3::AttributeValue'])
-    ## mac64-address.h (module 'network'): ns3::Mac64AddressChecker [class]
-    module.add_class('Mac64AddressChecker', import_from_module='ns.network', parent=root_module['ns3::AttributeChecker'])
-    ## mac64-address.h (module 'network'): ns3::Mac64AddressValue [class]
-    module.add_class('Mac64AddressValue', import_from_module='ns.network', parent=root_module['ns3::AttributeValue'])
     ## basic-data-calculators.h (module 'stats'): ns3::MinMaxAvgTotalCalculator<double> [class]
     module.add_class('MinMaxAvgTotalCalculator', import_from_module='ns.stats', template_parameters=['double'], parent=[root_module['ns3::DataCalculator'], root_module['ns3::StatisticalSummary']])
     ## net-device.h (module 'network'): ns3::NetDevice [class]
@@ -618,7 +613,6 @@ def register_methods(root_module):
     register_Ns3Ipv6Address_methods(root_module, root_module['ns3::Ipv6Address'])
     register_Ns3Ipv6Prefix_methods(root_module, root_module['ns3::Ipv6Prefix'])
     register_Ns3Mac48Address_methods(root_module, root_module['ns3::Mac48Address'])
-    register_Ns3Mac64Address_methods(root_module, root_module['ns3::Mac64Address'])
     register_Ns3Mac8Address_methods(root_module, root_module['ns3::Mac8Address'])
     register_Ns3NetDeviceContainer_methods(root_module, root_module['ns3::NetDeviceContainer'])
     register_Ns3NodeContainer_methods(root_module, root_module['ns3::NodeContainer'])
@@ -722,8 +716,6 @@ def register_methods(root_module):
     register_Ns3LogNormalRandomVariable_methods(root_module, root_module['ns3::LogNormalRandomVariable'])
     register_Ns3Mac48AddressChecker_methods(root_module, root_module['ns3::Mac48AddressChecker'])
     register_Ns3Mac48AddressValue_methods(root_module, root_module['ns3::Mac48AddressValue'])
-    register_Ns3Mac64AddressChecker_methods(root_module, root_module['ns3::Mac64AddressChecker'])
-    register_Ns3Mac64AddressValue_methods(root_module, root_module['ns3::Mac64AddressValue'])
     register_Ns3MinMaxAvgTotalCalculator__Double_methods(root_module, root_module['ns3::MinMaxAvgTotalCalculator< double >'])
     register_Ns3NetDevice_methods(root_module, root_module['ns3::NetDevice'])
     register_Ns3NixVector_methods(root_module, root_module['ns3::NixVector'])
@@ -875,6 +867,10 @@ def register_Ns3ApplicationContainer_methods(root_module, cls):
     cls.add_method('Start', 
                    'void', 
                    [param('ns3::Time', 'start')])
+    ## application-container.h (module 'network'): void ns3::ApplicationContainer::StartWithJitter(ns3::Time start, ns3::Ptr<ns3::RandomVariableStream> rv) [member function]
+    cls.add_method('StartWithJitter', 
+                   'void', 
+                   [param('ns3::Time', 'start'), param('ns3::Ptr< ns3::RandomVariableStream >', 'rv')])
     ## application-container.h (module 'network'): void ns3::ApplicationContainer::Stop(ns3::Time stop) [member function]
     cls.add_method('Stop', 
                    'void', 
@@ -2356,43 +2352,6 @@ def register_Ns3Mac48Address_methods(root_module, cls):
                    is_static=True)
     return
 
-def register_Ns3Mac64Address_methods(root_module, cls):
-    cls.add_binary_comparison_operator('==')
-    cls.add_binary_comparison_operator('!=')
-    cls.add_binary_comparison_operator('<')
-    cls.add_output_stream_operator()
-    ## mac64-address.h (module 'network'): ns3::Mac64Address::Mac64Address(ns3::Mac64Address const & arg0) [constructor]
-    cls.add_constructor([param('ns3::Mac64Address const &', 'arg0')])
-    ## mac64-address.h (module 'network'): ns3::Mac64Address::Mac64Address() [constructor]
-    cls.add_constructor([])
-    ## mac64-address.h (module 'network'): ns3::Mac64Address::Mac64Address(char const * str) [constructor]
-    cls.add_constructor([param('char const *', 'str')])
-    ## mac64-address.h (module 'network'): static ns3::Mac64Address ns3::Mac64Address::Allocate() [member function]
-    cls.add_method('Allocate', 
-                   'ns3::Mac64Address', 
-                   [], 
-                   is_static=True)
-    ## mac64-address.h (module 'network'): static ns3::Mac64Address ns3::Mac64Address::ConvertFrom(ns3::Address const & address) [member function]
-    cls.add_method('ConvertFrom', 
-                   'ns3::Mac64Address', 
-                   [param('ns3::Address const &', 'address')], 
-                   is_static=True)
-    ## mac64-address.h (module 'network'): void ns3::Mac64Address::CopyFrom(uint8_t const * buffer) [member function]
-    cls.add_method('CopyFrom', 
-                   'void', 
-                   [param('uint8_t const *', 'buffer')])
-    ## mac64-address.h (module 'network'): void ns3::Mac64Address::CopyTo(uint8_t * buffer) const [member function]
-    cls.add_method('CopyTo', 
-                   'void', 
-                   [param('uint8_t *', 'buffer')], 
-                   is_const=True)
-    ## mac64-address.h (module 'network'): static bool ns3::Mac64Address::IsMatchingType(ns3::Address const & address) [member function]
-    cls.add_method('IsMatchingType', 
-                   'bool', 
-                   [param('ns3::Address const &', 'address')], 
-                   is_static=True)
-    return
-
 def register_Ns3Mac8Address_methods(root_module, cls):
     cls.add_binary_comparison_operator('<')
     cls.add_binary_comparison_operator('==')
@@ -2513,6 +2472,11 @@ def register_Ns3NodeContainer_methods(root_module, cls):
     cls.add_method('Begin', 
                    'ns3::NodeContainer::Iterator', 
                    [], 
+                   is_const=True)
+    ## node-container.h (module 'network'): bool ns3::NodeContainer::Contains(uint32_t id) const [member function]
+    cls.add_method('Contains', 
+                   'bool', 
+                   [param('uint32_t', 'id')], 
                    is_const=True)
     ## node-container.h (module 'network'): void ns3::NodeContainer::Create(uint32_t n) [member function]
     cls.add_method('Create', 
@@ -2943,6 +2907,11 @@ def register_Ns3Simulator_methods(root_module, cls):
     cls.add_method('GetDelayLeft', 
                    'ns3::Time', 
                    [param('ns3::EventId const &', 'id')], 
+                   is_static=True)
+    ## simulator.h (module 'core'): static uint64_t ns3::Simulator::GetEventCount() [member function]
+    cls.add_method('GetEventCount', 
+                   'uint64_t', 
+                   [], 
                    is_static=True)
     ## simulator.h (module 'core'): static ns3::Ptr<ns3::SimulatorImpl> ns3::Simulator::GetImplementation() [member function]
     cls.add_method('GetImplementation', 
@@ -3407,6 +3376,7 @@ def register_Ns3Empty_methods(root_module, cls):
     return
 
 def register_Ns3Int64x64_t_methods(root_module, cls):
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::int64x64_t'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('+', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
@@ -4428,7 +4398,10 @@ def register_Ns3Time_methods(root_module, cls):
     cls.add_binary_numeric_operator('+', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::int64x64_t'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
     cls.add_inplace_numeric_operator('+=', param('ns3::Time const &', u'right'))
     cls.add_inplace_numeric_operator('-=', param('ns3::Time const &', u'right'))
     cls.add_output_stream_operator()
@@ -6485,46 +6458,6 @@ def register_Ns3Mac48AddressValue_methods(root_module, cls):
     cls.add_method('Set', 
                    'void', 
                    [param('ns3::Mac48Address const &', 'value')])
-    return
-
-def register_Ns3Mac64AddressChecker_methods(root_module, cls):
-    ## mac64-address.h (module 'network'): ns3::Mac64AddressChecker::Mac64AddressChecker() [constructor]
-    cls.add_constructor([])
-    ## mac64-address.h (module 'network'): ns3::Mac64AddressChecker::Mac64AddressChecker(ns3::Mac64AddressChecker const & arg0) [constructor]
-    cls.add_constructor([param('ns3::Mac64AddressChecker const &', 'arg0')])
-    return
-
-def register_Ns3Mac64AddressValue_methods(root_module, cls):
-    ## mac64-address.h (module 'network'): ns3::Mac64AddressValue::Mac64AddressValue() [constructor]
-    cls.add_constructor([])
-    ## mac64-address.h (module 'network'): ns3::Mac64AddressValue::Mac64AddressValue(ns3::Mac64Address const & value) [constructor]
-    cls.add_constructor([param('ns3::Mac64Address const &', 'value')])
-    ## mac64-address.h (module 'network'): ns3::Mac64AddressValue::Mac64AddressValue(ns3::Mac64AddressValue const & arg0) [constructor]
-    cls.add_constructor([param('ns3::Mac64AddressValue const &', 'arg0')])
-    ## mac64-address.h (module 'network'): ns3::Ptr<ns3::AttributeValue> ns3::Mac64AddressValue::Copy() const [member function]
-    cls.add_method('Copy', 
-                   'ns3::Ptr< ns3::AttributeValue >', 
-                   [], 
-                   is_const=True, is_virtual=True)
-    ## mac64-address.h (module 'network'): bool ns3::Mac64AddressValue::DeserializeFromString(std::string value, ns3::Ptr<const ns3::AttributeChecker> checker) [member function]
-    cls.add_method('DeserializeFromString', 
-                   'bool', 
-                   [param('std::string', 'value'), param('ns3::Ptr< ns3::AttributeChecker const >', 'checker')], 
-                   is_virtual=True)
-    ## mac64-address.h (module 'network'): ns3::Mac64Address ns3::Mac64AddressValue::Get() const [member function]
-    cls.add_method('Get', 
-                   'ns3::Mac64Address', 
-                   [], 
-                   is_const=True)
-    ## mac64-address.h (module 'network'): std::string ns3::Mac64AddressValue::SerializeToString(ns3::Ptr<const ns3::AttributeChecker> checker) const [member function]
-    cls.add_method('SerializeToString', 
-                   'std::string', 
-                   [param('ns3::Ptr< ns3::AttributeChecker const >', 'checker')], 
-                   is_const=True, is_virtual=True)
-    ## mac64-address.h (module 'network'): void ns3::Mac64AddressValue::Set(ns3::Mac64Address const & value) [member function]
-    cls.add_method('Set', 
-                   'void', 
-                   [param('ns3::Mac64Address const &', 'value')])
     return
 
 def register_Ns3MinMaxAvgTotalCalculator__Double_methods(root_module, cls):

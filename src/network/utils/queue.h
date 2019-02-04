@@ -30,6 +30,7 @@
 #include "ns3/unused.h"
 #include "ns3/log.h"
 #include "ns3/queue-size.h"
+#include "ns3/queue-item.h"
 #include <string>
 #include <sstream>
 #include <list>
@@ -232,7 +233,10 @@ private:
  * Queue is a template class. The type of the objects stored within the queue
  * is specified by the type parameter, which can be any class providing a
  * GetSize () method (e.g., Packet, QueueDiscItem, etc.). Subclasses need to
- * implement the DoEnqueue, DoDequeue, DoRemove and DoPeek methods.
+ * implement the Enqueue, Dequeue, Remove and Peek methods, and are
+ * encouraged to leverage the DoEnqueue, DoDequeue, DoRemove, and DoPeek
+ * methods in doing so, to ensure that appropriate trace sources are called
+ * and statistics are maintained.
  *
  * Users of the Queue template class usually hold a queue through a smart pointer,
  * hence forward declaration is recommended to avoid pulling the implementation
@@ -290,6 +294,9 @@ public:
    * Flush the queue.
    */
   void Flush (void);
+
+  /// Define ItemType as the type of the stored elements
+  typedef Item ItemType;
 
 protected:
 
@@ -594,6 +601,15 @@ Queue<Item>::DropAfterDequeue (Ptr<Item> item)
   m_traceDrop (item);
   m_traceDropAfterDequeue (item);
 }
+
+// The following explicit template instantiation declarations prevent all the
+// translation units including this header file to implicitly instantiate the
+// Queue<Packet> class and the Queue<QueueDiscItem> class. The unique instances
+// of these classes are explicitly created through the macros
+// NS_OBJECT_TEMPLATE_CLASS_DEFINE (Queue,Packet) and
+// NS_OBJECT_TEMPLATE_CLASS_DEFINE (Queue,QueueDiscItem), which are included in queue.cc
+extern template class Queue<Packet>;
+extern template class Queue<QueueDiscItem>;
 
 } // namespace ns3
 

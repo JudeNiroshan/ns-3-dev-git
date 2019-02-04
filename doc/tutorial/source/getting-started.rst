@@ -100,9 +100,7 @@ get a copy of a release by typing the following into your Linux shell
   $ tar xjf ns-allinone-3.28.tar.bz2
 
 If you change into the directory ``ns-allinone-3.28`` you should see a
-number of files and directories:
-
-::
+number of files and directories::
 
   $ ls
   bake      constants.py   ns-3.28                            README
@@ -138,9 +136,7 @@ following into your Linux shell (assuming you have installed Mercurial)::
   $ hg clone http://code.nsnam.org/bake
 
 As the hg (Mercurial) command executes, you should see something like the 
-following displayed,
-
-::
+following displayed::
 
   ...
   destination directory: bake
@@ -198,9 +194,7 @@ by referencing the binary, but if one chooses to run bake from
 outside of the directory it was downloaded into, it is advisable
 to put bake into your path, such as follows (Linux bash shell example).
 First, change into the 'bake' directory, and then set the following
-environment variables
-
-::
+environment variables::
 
   $ export BAKE_HOME=`pwd`
   $ export PATH=$PATH:$BAKE_HOME:$BAKE_HOME/build/bin
@@ -220,9 +214,7 @@ various components.  Type::
 
   $ ./bake.py check
 
-You should see something like the following,
-
-::
+You should see something like the following::
 
    > Python - OK
    > GNU C++ compiler - OK
@@ -315,7 +307,7 @@ You will see lots of typical compiler output messages displayed as the build
 script builds the various pieces you downloaded.  Eventually you should see the
 following::
 
-   Waf: Leaving directory `/path/to/workspace/ns-allinone-3.28/ns-3.28/build'
+   Waf: Leaving directory '/path/to/workspace/ns-allinone-3.28/ns-3.28/build'
    'build' finished successfully (6m25.032s)
   
    Modules built:
@@ -347,6 +339,31 @@ outside libraries may not have been built, or that the configuration
 specifically asked not to build them.  It does not mean that the 
 simulator did not build successfully or that it will provide wrong 
 results for the modules listed as being built.
+
+Handling build errors
++++++++++++++++++++++
+
+|ns3| releases are tested against the most recent C++ compilers available
+in the mainstream Linux and MacOS distributions at the time of the release.
+However, over time, newer distributions are released, with newer compilers,
+and these newer compilers tend to be more pedantic about warnings.  |ns3|
+configures its build to treat all warnings as errors, so it is sometimes
+the case, if you are using an older release version on a newer system,
+that a compiler warning will cause the build to fail.
+
+For instance, ns-3.28 was released prior to Fedora 28, which included
+a new major version of gcc (gcc-8).  Building ns-3.28 or older releases
+on Fedora 28, when Gtk2+ is installed, will result in an error such as::
+
+  /usr/include/gtk-2.0/gtk/gtkfilechooserbutton.h:59:8: error: unnecessary parentheses in declaration of ‘__gtk_reserved1’ [-Werror=parentheses]
+   void (*__gtk_reserved1);
+
+In releases starting with ns-3.28.1, an option is available in Waf to work
+around these issues.  The option disables the inclusion of the '-Werror' 
+flag to g++ and clang++.  The option is '--disable-werror' and must be
+used at configure time; e.g.::
+
+  ./waf configure --disable-werror --enable-examples --enable-tests
 
 Building with bake
 ++++++++++++++++++
@@ -531,14 +548,12 @@ A command exists for checking which profile is currently active
 for an already configured project::
 
   $ ./waf --check-profile
-  Waf: Entering directory \`/path/to/ns-3-allinone/ns-3.28/build'
+  Waf: Entering directory \`/path/to/ns-3-allinone/ns-3.28/build\'
   Build profile: debug
 
 The build.py script discussed above supports also the ``--enable-examples``
 and ``enable-tests`` arguments, but in general, does not directly support
 other waf options; for example, this will not work:
-
-::
 
   $ ./build.py --disable-python
 
@@ -549,9 +564,7 @@ will result in
   build.py: error: no such option: --disable-python
 
 However, the special operator ``--`` can be used to pass additional
-options through to waf, so instead of the above, the following will work:
-
-::
+options through to waf, so instead of the above, the following will work::
 
   $ ./build.py -- --disable-python   
 
@@ -709,9 +722,7 @@ environment.  So when installing libraries to the system, it is good
 practice to check that the intended libraries are being used.
 
 Users may choose to install to a different prefix by passing the ``--prefix``
-option at configure time, such as:
-
-::
+option at configure time, such as::
 
   ./waf configure --prefix=/opt/local
 

@@ -594,12 +594,6 @@ def register_types(module):
     typehandlers.add_type_alias(u'ns3::TcpSocketState::EcnState_t', u'ns3::TcpSocketState::EcnState_t')
     typehandlers.add_type_alias(u'ns3::TcpSocketState::EcnState_t*', u'ns3::TcpSocketState::EcnState_t*')
     typehandlers.add_type_alias(u'ns3::TcpSocketState::EcnState_t&', u'ns3::TcpSocketState::EcnState_t&')
-    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::TcpCongState_t const, ns3::TcpSocketState::TcpCongState_t const )', u'ns3::TcpSocketState::TcpCongStatesTracedValueCallback')
-    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::TcpCongState_t const, ns3::TcpSocketState::TcpCongState_t const )*', u'ns3::TcpSocketState::TcpCongStatesTracedValueCallback*')
-    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::TcpCongState_t const, ns3::TcpSocketState::TcpCongState_t const )&', u'ns3::TcpSocketState::TcpCongStatesTracedValueCallback&')
-    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::EcnState_t const, ns3::TcpSocketState::EcnState_t const )', u'ns3::TcpSocketState::EcnStatesTracedValueCallback')
-    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::EcnState_t const, ns3::TcpSocketState::EcnState_t const )*', u'ns3::TcpSocketState::EcnStatesTracedValueCallback*')
-    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::EcnState_t const, ns3::TcpSocketState::EcnState_t const )&', u'ns3::TcpSocketState::EcnStatesTracedValueCallback&')
     ## tcp-tx-buffer.h (module 'internet'): ns3::TcpTxBuffer [class]
     module.add_class('TcpTxBuffer', parent=root_module['ns3::Object'])
     ## tcp-vegas.h (module 'internet'): ns3::TcpVegas [class]
@@ -618,6 +612,9 @@ def register_types(module):
     module.add_class('Time', import_from_module='ns.core')
     ## nstime.h (module 'core'): ns3::Time::Unit [enumeration]
     module.add_enum('Unit', ['Y', 'D', 'H', 'MIN', 'S', 'MS', 'US', 'NS', 'PS', 'FS', 'LAST'], outer_class=root_module['ns3::Time'], import_from_module='ns.core')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )', u'ns3::Time::TracedCallback')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )*', u'ns3::Time::TracedCallback*')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )&', u'ns3::Time::TracedCallback&')
     ## nstime.h (module 'core'): ns3::Time [class]
     root_module['ns3::Time'].implicitly_converts_to(root_module['ns3::int64x64_t'])
     ## trace-source-accessor.h (module 'core'): ns3::TraceSourceAccessor [class]
@@ -1169,6 +1166,12 @@ def register_types_ns3_TracedValueCallback(module):
     typehandlers.add_type_alias(u'void ( * ) ( ns3::Time, ns3::Time )', u'ns3::TracedValueCallback::Time')
     typehandlers.add_type_alias(u'void ( * ) ( ns3::Time, ns3::Time )*', u'ns3::TracedValueCallback::Time*')
     typehandlers.add_type_alias(u'void ( * ) ( ns3::Time, ns3::Time )&', u'ns3::TracedValueCallback::Time&')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::TcpCongState_t const, ns3::TcpSocketState::TcpCongState_t const )', u'ns3::TracedValueCallback::TcpCongState')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::TcpCongState_t const, ns3::TcpSocketState::TcpCongState_t const )*', u'ns3::TracedValueCallback::TcpCongState*')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::TcpCongState_t const, ns3::TcpSocketState::TcpCongState_t const )&', u'ns3::TracedValueCallback::TcpCongState&')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::EcnState_t const, ns3::TcpSocketState::EcnState_t const )', u'ns3::TracedValueCallback::EcnState')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::EcnState_t const, ns3::TcpSocketState::EcnState_t const )*', u'ns3::TracedValueCallback::EcnState*')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::TcpSocketState::EcnState_t const, ns3::TcpSocketState::EcnState_t const )&', u'ns3::TracedValueCallback::EcnState&')
     typehandlers.add_type_alias(u'void ( * ) ( ns3::SequenceNumber32, ns3::SequenceNumber32 )', u'ns3::TracedValueCallback::SequenceNumber32')
     typehandlers.add_type_alias(u'void ( * ) ( ns3::SequenceNumber32, ns3::SequenceNumber32 )*', u'ns3::TracedValueCallback::SequenceNumber32*')
     typehandlers.add_type_alias(u'void ( * ) ( ns3::SequenceNumber32, ns3::SequenceNumber32 )&', u'ns3::TracedValueCallback::SequenceNumber32&')
@@ -4528,6 +4531,11 @@ def register_Ns3NodeContainer_methods(root_module, cls):
                    'ns3::NodeContainer::Iterator', 
                    [], 
                    is_const=True)
+    ## node-container.h (module 'network'): bool ns3::NodeContainer::Contains(uint32_t id) const [member function]
+    cls.add_method('Contains', 
+                   'bool', 
+                   [param('uint32_t', 'id')], 
+                   is_const=True)
     ## node-container.h (module 'network'): void ns3::NodeContainer::Create(uint32_t n) [member function]
     cls.add_method('Create', 
                    'void', 
@@ -5468,6 +5476,11 @@ def register_Ns3Simulator_methods(root_module, cls):
                    'ns3::Time', 
                    [param('ns3::EventId const &', 'id')], 
                    is_static=True)
+    ## simulator.h (module 'core'): static uint64_t ns3::Simulator::GetEventCount() [member function]
+    cls.add_method('GetEventCount', 
+                   'uint64_t', 
+                   [], 
+                   is_static=True)
     ## simulator.h (module 'core'): static ns3::Ptr<ns3::SimulatorImpl> ns3::Simulator::GetImplementation() [member function]
     cls.add_method('GetImplementation', 
                    'ns3::Ptr< ns3::SimulatorImpl >', 
@@ -6192,6 +6205,7 @@ def register_Ns3Empty_methods(root_module, cls):
     return
 
 def register_Ns3Int64x64_t_methods(root_module, cls):
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::int64x64_t'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('+', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
@@ -11949,7 +11963,10 @@ def register_Ns3Time_methods(root_module, cls):
     cls.add_binary_numeric_operator('+', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::int64x64_t'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
     cls.add_inplace_numeric_operator('+=', param('ns3::Time const &', u'right'))
     cls.add_inplace_numeric_operator('-=', param('ns3::Time const &', u'right'))
     cls.add_output_stream_operator()
@@ -12774,11 +12791,6 @@ def register_Ns3ArpCacheEntry_methods(root_module, cls):
     cls.add_method('SetMacAddress', 
                    'void', 
                    [param('ns3::Address', 'macAddress')])
-    ## arp-cache.h (module 'internet'): void ns3::ArpCache::Entry::SetMacAddresss(ns3::Address macAddress) [member function]
-    cls.add_method('SetMacAddresss', 
-                   'void', 
-                   [param('ns3::Address', 'macAddress')], 
-                   deprecated=True)
     ## arp-cache.h (module 'internet'): void ns3::ArpCache::Entry::UpdateSeen() [member function]
     cls.add_method('UpdateSeen', 
                    'void', 

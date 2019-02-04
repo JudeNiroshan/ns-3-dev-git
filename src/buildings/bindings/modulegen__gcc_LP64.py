@@ -222,6 +222,9 @@ def register_types(module):
     module.add_class('Time', import_from_module='ns.core')
     ## nstime.h (module 'core'): ns3::Time::Unit [enumeration]
     module.add_enum('Unit', ['Y', 'D', 'H', 'MIN', 'S', 'MS', 'US', 'NS', 'PS', 'FS', 'LAST'], outer_class=root_module['ns3::Time'], import_from_module='ns.core')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )', u'ns3::Time::TracedCallback')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )*', u'ns3::Time::TracedCallback*')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )&', u'ns3::Time::TracedCallback&')
     ## nstime.h (module 'core'): ns3::Time [class]
     root_module['ns3::Time'].implicitly_converts_to(root_module['ns3::int64x64_t'])
     ## trace-source-accessor.h (module 'core'): ns3::TraceSourceAccessor [class]
@@ -2039,6 +2042,11 @@ def register_Ns3NodeContainer_methods(root_module, cls):
                    'ns3::NodeContainer::Iterator', 
                    [], 
                    is_const=True)
+    ## node-container.h (module 'network'): bool ns3::NodeContainer::Contains(uint32_t id) const [member function]
+    cls.add_method('Contains', 
+                   'bool', 
+                   [param('uint32_t', 'id')], 
+                   is_const=True)
     ## node-container.h (module 'network'): void ns3::NodeContainer::Create(uint32_t n) [member function]
     cls.add_method('Create', 
                    'void', 
@@ -2754,6 +2762,7 @@ def register_Ns3Empty_methods(root_module, cls):
     return
 
 def register_Ns3Int64x64_t_methods(root_module, cls):
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::int64x64_t'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('+', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
@@ -3102,6 +3111,10 @@ def register_Ns3RandomDiscPositionAllocator_methods(root_module, cls):
     cls.add_method('SetY', 
                    'void', 
                    [param('double', 'y')])
+    ## position-allocator.h (module 'mobility'): void ns3::RandomDiscPositionAllocator::SetZ(double z) [member function]
+    cls.add_method('SetZ', 
+                   'void', 
+                   [param('double', 'z')])
     return
 
 def register_Ns3RandomPropagationLossModel_methods(root_module, cls):
@@ -3152,6 +3165,10 @@ def register_Ns3RandomRectanglePositionAllocator_methods(root_module, cls):
     cls.add_method('SetY', 
                    'void', 
                    [param('ns3::Ptr< ns3::RandomVariableStream >', 'y')])
+    ## position-allocator.h (module 'mobility'): void ns3::RandomRectanglePositionAllocator::SetZ(double z) [member function]
+    cls.add_method('SetZ', 
+                   'void', 
+                   [param('double', 'z')])
     return
 
 def register_Ns3RandomRoomPositionAllocator_methods(root_module, cls):
@@ -3389,7 +3406,10 @@ def register_Ns3Time_methods(root_module, cls):
     cls.add_binary_numeric_operator('+', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::int64x64_t'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
     cls.add_inplace_numeric_operator('+=', param('ns3::Time const &', u'right'))
     cls.add_inplace_numeric_operator('-=', param('ns3::Time const &', u'right'))
     cls.add_output_stream_operator()
@@ -3768,6 +3788,10 @@ def register_Ns3UniformDiscPositionAllocator_methods(root_module, cls):
     cls.add_method('SetY', 
                    'void', 
                    [param('double', 'y')])
+    ## position-allocator.h (module 'mobility'): void ns3::UniformDiscPositionAllocator::SetZ(double z) [member function]
+    cls.add_method('SetZ', 
+                   'void', 
+                   [param('double', 'z')])
     return
 
 def register_Ns3UniformRandomVariable_methods(root_module, cls):
@@ -4772,6 +4796,10 @@ def register_Ns3GridPositionAllocator_methods(root_module, cls):
     cls.add_method('SetN', 
                    'void', 
                    [param('uint32_t', 'n')])
+    ## position-allocator.h (module 'mobility'): void ns3::GridPositionAllocator::SetZ(double z) [member function]
+    cls.add_method('SetZ', 
+                   'void', 
+                   [param('double', 'z')])
     return
 
 def register_Ns3HybridBuildingsPropagationLossModel_methods(root_module, cls):

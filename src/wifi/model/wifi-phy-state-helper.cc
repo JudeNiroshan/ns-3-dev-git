@@ -480,7 +480,7 @@ WifiPhyStateHelper::SwitchFromRxEndError (Ptr<Packet> packet, double snr)
   DoSwitchFromRx ();
   if (!m_rxErrorCallback.IsNull ())
     {
-      m_rxErrorCallback (packet, snr);
+      m_rxErrorCallback ();
     }
 }
 
@@ -517,6 +517,7 @@ WifiPhyStateHelper::SwitchMaybeToCcaBusy (Time duration)
     {
       m_startCcaBusy = now;
     }
+  m_stateLogger (now, duration, WifiPhyState::CCA_BUSY);
   m_endCcaBusy = std::max (m_endCcaBusy, now + duration);
 }
 

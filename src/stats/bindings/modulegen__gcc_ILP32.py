@@ -138,6 +138,9 @@ def register_types(module):
     module.add_class('Time', import_from_module='ns.core')
     ## nstime.h (module 'core'): ns3::Time::Unit [enumeration]
     module.add_enum('Unit', ['Y', 'D', 'H', 'MIN', 'S', 'MS', 'US', 'NS', 'PS', 'FS', 'LAST'], outer_class=root_module['ns3::Time'], import_from_module='ns.core')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )', u'ns3::Time::TracedCallback')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )*', u'ns3::Time::TracedCallback*')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )&', u'ns3::Time::TracedCallback&')
     ## nstime.h (module 'core'): ns3::Time [class]
     root_module['ns3::Time'].implicitly_converts_to(root_module['ns3::int64x64_t'])
     ## trace-source-accessor.h (module 'core'): ns3::TraceSourceAccessor [class]
@@ -200,6 +203,8 @@ def register_types(module):
     module.add_class('OmnetDataOutput', parent=root_module['ns3::DataOutputInterface'])
     ## probe.h (module 'stats'): ns3::Probe [class]
     module.add_class('Probe', parent=root_module['ns3::DataCollectionObject'])
+    ## sqlite-data-output.h (module 'stats'): ns3::SqliteDataOutput [class]
+    module.add_class('SqliteDataOutput', parent=root_module['ns3::DataOutputInterface'])
     ## time-data-calculators.h (module 'stats'): ns3::TimeMinMaxAvgTotalCalculator [class]
     module.add_class('TimeMinMaxAvgTotalCalculator', parent=root_module['ns3::DataCalculator'])
     ## time-probe.h (module 'stats'): ns3::TimeProbe [class]
@@ -420,6 +425,7 @@ def register_methods(root_module):
     register_Ns3ObjectFactoryValue_methods(root_module, root_module['ns3::ObjectFactoryValue'])
     register_Ns3OmnetDataOutput_methods(root_module, root_module['ns3::OmnetDataOutput'])
     register_Ns3Probe_methods(root_module, root_module['ns3::Probe'])
+    register_Ns3SqliteDataOutput_methods(root_module, root_module['ns3::SqliteDataOutput'])
     register_Ns3TimeMinMaxAvgTotalCalculator_methods(root_module, root_module['ns3::TimeMinMaxAvgTotalCalculator'])
     register_Ns3TimeProbe_methods(root_module, root_module['ns3::TimeProbe'])
     register_Ns3TimeSeriesAdaptor_methods(root_module, root_module['ns3::TimeSeriesAdaptor'])
@@ -1046,6 +1052,11 @@ def register_Ns3Simulator_methods(root_module, cls):
                    'ns3::Time', 
                    [param('ns3::EventId const &', 'id')], 
                    is_static=True)
+    ## simulator.h (module 'core'): static uint64_t ns3::Simulator::GetEventCount() [member function]
+    cls.add_method('GetEventCount', 
+                   'uint64_t', 
+                   [], 
+                   is_static=True)
     ## simulator.h (module 'core'): static ns3::Ptr<ns3::SimulatorImpl> ns3::Simulator::GetImplementation() [member function]
     cls.add_method('GetImplementation', 
                    'ns3::Ptr< ns3::SimulatorImpl >', 
@@ -1578,6 +1589,7 @@ def register_Ns3Empty_methods(root_module, cls):
     return
 
 def register_Ns3Int64x64_t_methods(root_module, cls):
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::int64x64_t'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('+', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
@@ -1861,7 +1873,10 @@ def register_Ns3Time_methods(root_module, cls):
     cls.add_binary_numeric_operator('+', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::int64x64_t'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
     cls.add_inplace_numeric_operator('+=', param('ns3::Time const &', u'right'))
     cls.add_inplace_numeric_operator('-=', param('ns3::Time const &', u'right'))
     cls.add_output_stream_operator()
@@ -3102,6 +3117,28 @@ def register_Ns3Probe_methods(root_module, cls):
                    'bool', 
                    [], 
                    is_const=True, is_virtual=True)
+    return
+
+def register_Ns3SqliteDataOutput_methods(root_module, cls):
+    ## sqlite-data-output.h (module 'stats'): ns3::SqliteDataOutput::SqliteDataOutput(ns3::SqliteDataOutput const & arg0) [constructor]
+    cls.add_constructor([param('ns3::SqliteDataOutput const &', 'arg0')])
+    ## sqlite-data-output.h (module 'stats'): ns3::SqliteDataOutput::SqliteDataOutput() [constructor]
+    cls.add_constructor([])
+    ## sqlite-data-output.h (module 'stats'): static ns3::TypeId ns3::SqliteDataOutput::GetTypeId() [member function]
+    cls.add_method('GetTypeId', 
+                   'ns3::TypeId', 
+                   [], 
+                   is_static=True)
+    ## sqlite-data-output.h (module 'stats'): void ns3::SqliteDataOutput::Output(ns3::DataCollector & dc) [member function]
+    cls.add_method('Output', 
+                   'void', 
+                   [param('ns3::DataCollector &', 'dc')], 
+                   is_virtual=True)
+    ## sqlite-data-output.h (module 'stats'): void ns3::SqliteDataOutput::DoDispose() [member function]
+    cls.add_method('DoDispose', 
+                   'void', 
+                   [], 
+                   visibility='protected', is_virtual=True)
     return
 
 def register_Ns3TimeMinMaxAvgTotalCalculator_methods(root_module, cls):

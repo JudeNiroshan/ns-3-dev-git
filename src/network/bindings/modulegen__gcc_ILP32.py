@@ -314,6 +314,14 @@ def register_types(module):
     module.add_enum('VhtKnown', ['VHT_KNOWN_NONE', 'VHT_KNOWN_STBC', 'VHT_KNOWN_TXOP_PS_NOT_ALLOWED', 'VHT_KNOWN_GUARD_INTERVAL', 'VHT_KNOWN_SHORT_GI_NSYM_DISAMBIGUATION', 'VHT_KNOWN_LDPC_EXTRA_OFDM_SYMBOL', 'VHT_KNOWN_BEAMFORMED', 'VHT_KNOWN_BANDWIDTH', 'VHT_KNOWN_GROUP_ID', 'VHT_KNOWN_PARTIAL_AID'], outer_class=root_module['ns3::RadiotapHeader'])
     ## radiotap-header.h (module 'network'): ns3::RadiotapHeader::VhtFlags [enumeration]
     module.add_enum('VhtFlags', ['VHT_FLAGS_NONE', 'VHT_FLAGS_STBC', 'VHT_FLAGS_TXOP_PS_NOT_ALLOWED', 'VHT_FLAGS_GUARD_INTERVAL', 'VHT_FLAGS_SHORT_GI_NSYM_DISAMBIGUATION', 'VHT_FLAGS_LDPC_EXTRA_OFDM_SYMBOL', 'VHT_FLAGS_BEAMFORMED'], outer_class=root_module['ns3::RadiotapHeader'])
+    ## radiotap-header.h (module 'network'): ns3::RadiotapHeader::HeData1 [enumeration]
+    module.add_enum('HeData1', ['HE_DATA1_FORMAT_EXT_SU', 'HE_DATA1_FORMAT_MU', 'HE_DATA1_FORMAT_TRIG', 'HE_DATA1_BSS_COLOR_KNOWN', 'HE_DATA1_BEAM_CHANGE_KNOWN', 'HE_DATA1_UL_DL_KNOWN', 'HE_DATA1_DATA_MCS_KNOWN', 'HE_DATA1_DATA_DCM_KNOWN', 'HE_DATA1_CODING_KNOWN', 'HE_DATA1_LDPC_XSYMSEG_KNOWN', 'HE_DATA1_STBC_KNOWN', 'HE_DATA1_SPTL_REUSE_KNOWN', 'HE_DATA1_SPTL_REUSE2_KNOWN', 'HE_DATA1_SPTL_REUSE3_KNOWN', 'HE_DATA1_SPTL_REUSE4_KNOWN', 'HE_DATA1_BW_RU_ALLOC_KNOWN', 'HE_DATA1_DOPPLER_KNOWN'], outer_class=root_module['ns3::RadiotapHeader'])
+    ## radiotap-header.h (module 'network'): ns3::RadiotapHeader::HeData2 [enumeration]
+    module.add_enum('HeData2', ['HE_DATA2_PRISEC_80_KNOWN', 'HE_DATA2_GI_KNOWN', 'HE_DATA2_NUM_LTF_SYMS_KNOWN', 'HE_DATA2_PRE_FEC_PAD_KNOWN', 'HE_DATA2_TXBF_KNOWN', 'HE_DATA2_PE_DISAMBIG_KNOWN', 'HE_DATA2_TXOP_KNOWN', 'HE_DATA2_MIDAMBLE_KNOWN', 'HE_DATA2_RU_OFFSET', 'HE_DATA2_RU_OFFSET_KNOWN', 'HE_DATA2_PRISEC_80_SEC'], outer_class=root_module['ns3::RadiotapHeader'])
+    ## radiotap-header.h (module 'network'): ns3::RadiotapHeader::HeData3 [enumeration]
+    module.add_enum('HeData3', ['HE_DATA3_BSS_COLOR', 'HE_DATA3_BEAM_CHANGE', 'HE_DATA3_UL_DL', 'HE_DATA3_DATA_MCS', 'HE_DATA3_DATA_DCM', 'HE_DATA3_CODING', 'HE_DATA3_LDPC_XSYMSEG', 'HE_DATA3_STBC'], outer_class=root_module['ns3::RadiotapHeader'])
+    ## radiotap-header.h (module 'network'): ns3::RadiotapHeader::HeData5 [enumeration]
+    module.add_enum('HeData5', ['HE_DATA5_DATA_BW_RU_ALLOC_40MHZ', 'HE_DATA5_DATA_BW_RU_ALLOC_80MHZ', 'HE_DATA5_DATA_BW_RU_ALLOC_160MHZ', 'HE_DATA5_DATA_BW_RU_ALLOC_26T', 'HE_DATA5_DATA_BW_RU_ALLOC_52T', 'HE_DATA5_DATA_BW_RU_ALLOC_106T', 'HE_DATA5_DATA_BW_RU_ALLOC_242T', 'HE_DATA5_DATA_BW_RU_ALLOC_484T', 'HE_DATA5_DATA_BW_RU_ALLOC_996T', 'HE_DATA5_DATA_BW_RU_ALLOC_2x996T', 'HE_DATA5_GI_1_6', 'HE_DATA5_GI_3_2', 'HE_DATA5_LTF_SYM_SIZE', 'HE_DATA5_NUM_LTF_SYMS', 'HE_DATA5_PRE_FEC_PAD', 'HE_DATA5_TXBF', 'HE_DATA5_PE_DISAMBIG'], outer_class=root_module['ns3::RadiotapHeader'])
     ## random-variable-stream.h (module 'core'): ns3::RandomVariableStream [class]
     module.add_class('RandomVariableStream', import_from_module='ns.core', parent=root_module['ns3::Object'])
     ## random-variable-stream.h (module 'core'): ns3::SequentialRandomVariable [class]
@@ -382,6 +390,9 @@ def register_types(module):
     module.add_class('Time', import_from_module='ns.core')
     ## nstime.h (module 'core'): ns3::Time::Unit [enumeration]
     module.add_enum('Unit', ['Y', 'D', 'H', 'MIN', 'S', 'MS', 'US', 'NS', 'PS', 'FS', 'LAST'], outer_class=root_module['ns3::Time'], import_from_module='ns.core')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )', u'ns3::Time::TracedCallback')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )*', u'ns3::Time::TracedCallback*')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )&', u'ns3::Time::TracedCallback&')
     ## nstime.h (module 'core'): ns3::Time [class]
     root_module['ns3::Time'].implicitly_converts_to(root_module['ns3::int64x64_t'])
     ## trace-source-accessor.h (module 'core'): ns3::TraceSourceAccessor [class]
@@ -524,9 +535,9 @@ def register_types(module):
     typehandlers.add_type_alias(u'ns3::Callback< void, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >&', u'ns3::NetDeviceQueue::WakeCallback&')
     ## net-device-queue-interface.h (module 'network'): ns3::NetDeviceQueueInterface [class]
     module.add_class('NetDeviceQueueInterface', parent=root_module['ns3::Object'])
-    typehandlers.add_type_alias(u'ns3::Callback< unsigned char, ns3::Ptr< ns3::QueueItem >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >', u'ns3::NetDeviceQueueInterface::SelectQueueCallback')
-    typehandlers.add_type_alias(u'ns3::Callback< unsigned char, ns3::Ptr< ns3::QueueItem >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >*', u'ns3::NetDeviceQueueInterface::SelectQueueCallback*')
-    typehandlers.add_type_alias(u'ns3::Callback< unsigned char, ns3::Ptr< ns3::QueueItem >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >&', u'ns3::NetDeviceQueueInterface::SelectQueueCallback&')
+    typehandlers.add_type_alias(u'std::function< unsigned long long ( ns3::Ptr< ns3::QueueItem > ) >', u'ns3::NetDeviceQueueInterface::SelectQueueCallback')
+    typehandlers.add_type_alias(u'std::function< unsigned long long ( ns3::Ptr< ns3::QueueItem > ) >*', u'ns3::NetDeviceQueueInterface::SelectQueueCallback*')
+    typehandlers.add_type_alias(u'std::function< unsigned long long ( ns3::Ptr< ns3::QueueItem > ) >&', u'ns3::NetDeviceQueueInterface::SelectQueueCallback&')
     ## nix-vector.h (module 'network'): ns3::NixVector [class]
     module.add_class('NixVector', parent=root_module['ns3::SimpleRefCount< ns3::NixVector, ns3::empty, ns3::DefaultDeleter<ns3::NixVector> >'])
     ## node.h (module 'network'): ns3::Node [class]
@@ -637,10 +648,17 @@ def register_types(module):
     module.add_class('PbbTlv', parent=root_module['ns3::SimpleRefCount< ns3::PbbTlv, ns3::empty, ns3::DefaultDeleter<ns3::PbbTlv> >'])
     ## probe.h (module 'stats'): ns3::Probe [class]
     module.add_class('Probe', import_from_module='ns.stats', parent=root_module['ns3::DataCollectionObject'])
-    ## net-device-queue-interface.h (module 'network'): ns3::Queue<ns3::Packet> [class]
+    ## queue.h (module 'network'): ns3::Queue<ns3::Packet> [class]
     module.add_class('Queue', template_parameters=['ns3::Packet'], parent=root_module['ns3::QueueBase'])
-    ## net-device-queue-interface.h (module 'network'): ns3::Queue<ns3::QueueDiscItem> [class]
+    typehandlers.add_type_alias(u'ns3::Packet', u'ns3::Queue< ns3::Packet > ItemType')
+    typehandlers.add_type_alias(u'ns3::Packet*', u'ns3::Queue< ns3::Packet > ItemType*')
+    typehandlers.add_type_alias(u'ns3::Packet&', u'ns3::Queue< ns3::Packet > ItemType&')
+    module.add_typedef(root_module['ns3::Packet'], 'ItemType')
+    ## queue.h (module 'network'): ns3::Queue<ns3::QueueDiscItem> [class]
     module.add_class('Queue', template_parameters=['ns3::QueueDiscItem'], parent=root_module['ns3::QueueBase'])
+    typehandlers.add_type_alias(u'ns3::QueueDiscItem', u'ns3::Queue< ns3::QueueDiscItem > ItemType')
+    typehandlers.add_type_alias(u'ns3::QueueDiscItem*', u'ns3::Queue< ns3::QueueDiscItem > ItemType*')
+    typehandlers.add_type_alias(u'ns3::QueueDiscItem&', u'ns3::Queue< ns3::QueueDiscItem > ItemType&')
     ## queue-item.h (module 'network'): ns3::QueueItem [class]
     module.add_class('QueueItem', parent=root_module['ns3::SimpleRefCount< ns3::QueueItem, ns3::empty, ns3::DefaultDeleter<ns3::QueueItem> >'])
     ## queue-item.h (module 'network'): ns3::QueueItem::Uint8Values [enumeration]
@@ -686,8 +704,6 @@ def register_types(module):
     module.add_class('CallbackImpl', import_from_module='ns.core', template_parameters=['bool', 'ns3::Ptr<ns3::Socket>', 'const ns3::Address &', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty'], parent=root_module['ns3::CallbackImplBase'])
     ## callback.h (module 'core'): ns3::CallbackImpl<ns3::ObjectBase *, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty> [class]
     module.add_class('CallbackImpl', import_from_module='ns.core', template_parameters=['ns3::ObjectBase *', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty'], parent=root_module['ns3::CallbackImplBase'])
-    ## callback.h (module 'core'): ns3::CallbackImpl<unsigned char, ns3::Ptr<ns3::QueueItem>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty> [class]
-    module.add_class('CallbackImpl', import_from_module='ns.core', template_parameters=['unsigned char', 'ns3::Ptr<ns3::QueueItem>', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty'], parent=root_module['ns3::CallbackImplBase'])
     ## callback.h (module 'core'): ns3::CallbackImpl<void, ns3::Ptr<const ns3::Packet>, const ns3::Address &, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty> [class]
     module.add_class('CallbackImpl', import_from_module='ns.core', template_parameters=['void', 'ns3::Ptr<const ns3::Packet>', 'const ns3::Address &', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty'], parent=root_module['ns3::CallbackImplBase'])
     ## callback.h (module 'core'): ns3::CallbackImpl<void, ns3::Ptr<const ns3::Packet>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty> [class]
@@ -710,6 +726,10 @@ def register_types(module):
     module.add_class('CallbackImpl', import_from_module='ns.core', template_parameters=['void', 'unsigned int', 'unsigned int', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty'], parent=root_module['ns3::CallbackImplBase'])
     ## basic-data-calculators.h (module 'stats'): ns3::CounterCalculator<unsigned int> [class]
     module.add_class('CounterCalculator', import_from_module='ns.stats', template_parameters=['unsigned int'], parent=root_module['ns3::DataCalculator'])
+    ## drop-tail-queue.h (module 'network'): ns3::DropTailQueue<ns3::Packet> [class]
+    module.add_class('DropTailQueue', template_parameters=['ns3::Packet'], parent=root_module['ns3::Queue< ns3::Packet >'])
+    ## drop-tail-queue.h (module 'network'): ns3::DropTailQueue<ns3::QueueDiscItem> [class]
+    module.add_class('DropTailQueue', template_parameters=['ns3::QueueDiscItem'], parent=root_module['ns3::Queue< ns3::QueueDiscItem >'])
     ## error-channel.h (module 'network'): ns3::ErrorChannel [class]
     module.add_class('ErrorChannel', parent=root_module['ns3::SimpleChannel'])
     ## packet-data-calculators.h (module 'network'): ns3::PacketCounterCalculator [class]
@@ -748,12 +768,12 @@ def register_types(module):
     typehandlers.add_type_alias(u'ns3::Callback< void, ns3::Ptr< ns3::Packet >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >', u'ns3::GenericPhyRxEndOkCallback')
     typehandlers.add_type_alias(u'ns3::Callback< void, ns3::Ptr< ns3::Packet >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >*', u'ns3::GenericPhyRxEndOkCallback*')
     typehandlers.add_type_alias(u'ns3::Callback< void, ns3::Ptr< ns3::Packet >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >&', u'ns3::GenericPhyRxEndOkCallback&')
-    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )', u'ns3::LogTimePrinter')
-    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )*', u'ns3::LogTimePrinter*')
-    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )&', u'ns3::LogTimePrinter&')
-    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )', u'ns3::LogNodePrinter')
-    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )*', u'ns3::LogNodePrinter*')
-    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )&', u'ns3::LogNodePrinter&')
+    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )', u'ns3::TimePrinter')
+    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )*', u'ns3::TimePrinter*')
+    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )&', u'ns3::TimePrinter&')
+    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )', u'ns3::NodePrinter')
+    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )*', u'ns3::NodePrinter*')
+    typehandlers.add_type_alias(u'void ( * ) ( std::ostream & )&', u'ns3::NodePrinter&')
     
     ## Register a nested module for the namespace FatalImpl
     
@@ -1105,7 +1125,6 @@ def register_methods(root_module):
     register_Ns3CallbackImpl__Bool_Ns3Ptr__lt__ns3NetDevice__gt___Ns3Ptr__lt__const_ns3Packet__gt___Unsigned_short_Const_ns3Address___amp___Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, root_module['ns3::CallbackImpl< bool, ns3::Ptr<ns3::NetDevice>, ns3::Ptr<const ns3::Packet>, unsigned short, const ns3::Address &, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'])
     register_Ns3CallbackImpl__Bool_Ns3Ptr__lt__ns3Socket__gt___Const_ns3Address___amp___Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, root_module['ns3::CallbackImpl< bool, ns3::Ptr<ns3::Socket>, const ns3::Address &, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'])
     register_Ns3CallbackImpl__Ns3ObjectBase___star___Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, root_module['ns3::CallbackImpl< ns3::ObjectBase *, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'])
-    register_Ns3CallbackImpl__Unsigned_char_Ns3Ptr__lt__ns3QueueItem__gt___Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, root_module['ns3::CallbackImpl< unsigned char, ns3::Ptr<ns3::QueueItem>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'])
     register_Ns3CallbackImpl__Void_Ns3Ptr__lt__const_ns3Packet__gt___Const_ns3Address___amp___Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, root_module['ns3::CallbackImpl< void, ns3::Ptr<const ns3::Packet>, const ns3::Address &, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'])
     register_Ns3CallbackImpl__Void_Ns3Ptr__lt__const_ns3Packet__gt___Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, root_module['ns3::CallbackImpl< void, ns3::Ptr<const ns3::Packet>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'])
     register_Ns3CallbackImpl__Void_Ns3Ptr__lt__const_ns3QueueDiscItem__gt___Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, root_module['ns3::CallbackImpl< void, ns3::Ptr<const ns3::QueueDiscItem>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'])
@@ -1117,6 +1136,8 @@ def register_methods(root_module):
     register_Ns3CallbackImpl__Void_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, root_module['ns3::CallbackImpl< void, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'])
     register_Ns3CallbackImpl__Void_Unsigned_int_Unsigned_int_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, root_module['ns3::CallbackImpl< void, unsigned int, unsigned int, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'])
     register_Ns3CounterCalculator__Unsigned_int_methods(root_module, root_module['ns3::CounterCalculator< unsigned int >'])
+    register_Ns3DropTailQueue__Ns3Packet_methods(root_module, root_module['ns3::DropTailQueue< ns3::Packet >'])
+    register_Ns3DropTailQueue__Ns3QueueDiscItem_methods(root_module, root_module['ns3::DropTailQueue< ns3::QueueDiscItem >'])
     register_Ns3ErrorChannel_methods(root_module, root_module['ns3::ErrorChannel'])
     register_Ns3PacketCounterCalculator_methods(root_module, root_module['ns3::PacketCounterCalculator'])
     register_Ns3PacketProbe_methods(root_module, root_module['ns3::PacketProbe'])
@@ -1244,6 +1265,10 @@ def register_Ns3ApplicationContainer_methods(root_module, cls):
     cls.add_method('Start', 
                    'void', 
                    [param('ns3::Time', 'start')])
+    ## application-container.h (module 'network'): void ns3::ApplicationContainer::StartWithJitter(ns3::Time start, ns3::Ptr<ns3::RandomVariableStream> rv) [member function]
+    cls.add_method('StartWithJitter', 
+                   'void', 
+                   [param('ns3::Time', 'start'), param('ns3::Ptr< ns3::RandomVariableStream >', 'rv')])
     ## application-container.h (module 'network'): void ns3::ApplicationContainer::Stop(ns3::Time stop) [member function]
     cls.add_method('Stop', 
                    'void', 
@@ -3053,6 +3078,11 @@ def register_Ns3NodeContainer_methods(root_module, cls):
                    'ns3::NodeContainer::Iterator', 
                    [], 
                    is_const=True)
+    ## node-container.h (module 'network'): bool ns3::NodeContainer::Contains(uint32_t id) const [member function]
+    cls.add_method('Contains', 
+                   'bool', 
+                   [param('uint32_t', 'id')], 
+                   is_const=True)
     ## node-container.h (module 'network'): void ns3::NodeContainer::Create(uint32_t n) [member function]
     cls.add_method('Create', 
                    'void', 
@@ -4015,6 +4045,11 @@ def register_Ns3Simulator_methods(root_module, cls):
                    'ns3::Time', 
                    [param('ns3::EventId const &', 'id')], 
                    is_static=True)
+    ## simulator.h (module 'core'): static uint64_t ns3::Simulator::GetEventCount() [member function]
+    cls.add_method('GetEventCount', 
+                   'uint64_t', 
+                   [], 
+                   is_static=True)
     ## simulator.h (module 'core'): static ns3::Ptr<ns3::SimulatorImpl> ns3::Simulator::GetImplementation() [member function]
     cls.add_method('GetImplementation', 
                    'ns3::Ptr< ns3::SimulatorImpl >', 
@@ -4525,6 +4560,7 @@ def register_Ns3Empty_methods(root_module, cls):
     return
 
 def register_Ns3Int64x64_t_methods(root_module, cls):
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::int64x64_t'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('+', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
@@ -4816,11 +4852,6 @@ def register_Ns3Object_methods(root_module, cls):
                    'ns3::TypeId', 
                    [], 
                    is_const=True, is_virtual=True)
-    ## object.h (module 'core'): ns3::Ptr<ns3::NetDevice> ns3::Object::GetObject() const [member function]
-    cls.add_method('GetObject', 
-                   'ns3::Ptr< ns3::NetDevice >', 
-                   [], 
-                   is_const=True, template_parameters=[u'ns3::NetDevice'])
     ## object.h (module 'core'): static ns3::TypeId ns3::Object::GetTypeId() [member function]
     cls.add_method('GetTypeId', 
                    'ns3::TypeId', 
@@ -5189,131 +5220,21 @@ def register_Ns3RadiotapHeader_methods(root_module, cls):
                    'uint32_t', 
                    [param('ns3::Buffer::Iterator', 'start')], 
                    is_virtual=True)
-    ## radiotap-header.h (module 'network'): uint16_t ns3::RadiotapHeader::GetAmpduStatusFlags() const [member function]
-    cls.add_method('GetAmpduStatusFlags', 
-                   'uint16_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint32_t ns3::RadiotapHeader::GetAmpduStatusRef() const [member function]
-    cls.add_method('GetAmpduStatusRef', 
-                   'uint32_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetAntennaNoisePower() const [member function]
-    cls.add_method('GetAntennaNoisePower', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetAntennaSignalPower() const [member function]
-    cls.add_method('GetAntennaSignalPower', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint16_t ns3::RadiotapHeader::GetChannelFlags() const [member function]
-    cls.add_method('GetChannelFlags', 
-                   'uint16_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint16_t ns3::RadiotapHeader::GetChannelFrequency() const [member function]
-    cls.add_method('GetChannelFrequency', 
-                   'uint16_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetFrameFlags() const [member function]
-    cls.add_method('GetFrameFlags', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
     ## radiotap-header.h (module 'network'): ns3::TypeId ns3::RadiotapHeader::GetInstanceTypeId() const [member function]
     cls.add_method('GetInstanceTypeId', 
                    'ns3::TypeId', 
                    [], 
                    is_const=True, is_virtual=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetMcsFlags() const [member function]
-    cls.add_method('GetMcsFlags', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetMcsKnown() const [member function]
-    cls.add_method('GetMcsKnown', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetMcsRate() const [member function]
-    cls.add_method('GetMcsRate', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetRate() const [member function]
-    cls.add_method('GetRate', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
     ## radiotap-header.h (module 'network'): uint32_t ns3::RadiotapHeader::GetSerializedSize() const [member function]
     cls.add_method('GetSerializedSize', 
                    'uint32_t', 
                    [], 
                    is_const=True, is_virtual=True)
-    ## radiotap-header.h (module 'network'): uint64_t ns3::RadiotapHeader::GetTsft() const [member function]
-    cls.add_method('GetTsft', 
-                   'uint64_t', 
-                   [], 
-                   is_const=True)
     ## radiotap-header.h (module 'network'): static ns3::TypeId ns3::RadiotapHeader::GetTypeId() [member function]
     cls.add_method('GetTypeId', 
                    'ns3::TypeId', 
                    [], 
                    is_static=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetVhtBandwidth() const [member function]
-    cls.add_method('GetVhtBandwidth', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetVhtCoding() const [member function]
-    cls.add_method('GetVhtCoding', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetVhtFlags() const [member function]
-    cls.add_method('GetVhtFlags', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetVhtGroupId() const [member function]
-    cls.add_method('GetVhtGroupId', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint16_t ns3::RadiotapHeader::GetVhtKnown() const [member function]
-    cls.add_method('GetVhtKnown', 
-                   'uint16_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetVhtMcsNssUser1() const [member function]
-    cls.add_method('GetVhtMcsNssUser1', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetVhtMcsNssUser2() const [member function]
-    cls.add_method('GetVhtMcsNssUser2', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetVhtMcsNssUser3() const [member function]
-    cls.add_method('GetVhtMcsNssUser3', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetVhtMcsNssUser4() const [member function]
-    cls.add_method('GetVhtMcsNssUser4', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
-    ## radiotap-header.h (module 'network'): uint8_t ns3::RadiotapHeader::GetVhtPartialAid() const [member function]
-    cls.add_method('GetVhtPartialAid', 
-                   'uint8_t', 
-                   [], 
-                   is_const=True)
     ## radiotap-header.h (module 'network'): void ns3::RadiotapHeader::Print(std::ostream & os) const [member function]
     cls.add_method('Print', 
                    'void', 
@@ -5344,6 +5265,10 @@ def register_Ns3RadiotapHeader_methods(root_module, cls):
     cls.add_method('SetFrameFlags', 
                    'void', 
                    [param('uint8_t', 'flags')])
+    ## radiotap-header.h (module 'network'): void ns3::RadiotapHeader::SetHeFields(uint16_t data1, uint16_t data2, uint16_t data3, uint16_t data5) [member function]
+    cls.add_method('SetHeFields', 
+                   'void', 
+                   [param('uint16_t', 'data1'), param('uint16_t', 'data2'), param('uint16_t', 'data3'), param('uint16_t', 'data5')])
     ## radiotap-header.h (module 'network'): void ns3::RadiotapHeader::SetMcsFields(uint8_t known, uint8_t flags, uint8_t mcs) [member function]
     cls.add_method('SetMcsFields', 
                    'void', 
@@ -6279,7 +6204,10 @@ def register_Ns3Time_methods(root_module, cls):
     cls.add_binary_numeric_operator('+', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::int64x64_t'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
     cls.add_inplace_numeric_operator('+=', param('ns3::Time const &', u'right'))
     cls.add_inplace_numeric_operator('-=', param('ns3::Time const &', u'right'))
     cls.add_output_stream_operator()
@@ -6980,16 +6908,6 @@ def register_Ns3CallbackImplBase_methods(root_module, cls):
                    'std::string', 
                    [], 
                    is_static=True, visibility='protected', template_parameters=[u'ns3::Ptr<ns3::QueueDiscItem const> '])
-    ## callback.h (module 'core'): static std::string ns3::CallbackImplBase::GetCppTypeid() [member function]
-    cls.add_method('GetCppTypeid', 
-                   'std::string', 
-                   [], 
-                   is_static=True, visibility='protected', template_parameters=[u'unsigned char'])
-    ## callback.h (module 'core'): static std::string ns3::CallbackImplBase::GetCppTypeid() [member function]
-    cls.add_method('GetCppTypeid', 
-                   'std::string', 
-                   [], 
-                   is_static=True, visibility='protected', template_parameters=[u'ns3::Ptr<ns3::QueueItem> '])
     ## callback.h (module 'core'): static std::string ns3::CallbackImplBase::GetCppTypeid() [member function]
     cls.add_method('GetCppTypeid', 
                    'std::string', 
@@ -8460,19 +8378,37 @@ def register_Ns3NetDevice_methods(root_module, cls):
     return
 
 def register_Ns3NetDeviceQueue_methods(root_module, cls):
-    ## net-device-queue-interface.h (module 'network'): ns3::NetDeviceQueue::NetDeviceQueue(ns3::NetDeviceQueue const & arg0) [constructor]
-    cls.add_constructor([param('ns3::NetDeviceQueue const &', 'arg0')])
     ## net-device-queue-interface.h (module 'network'): ns3::NetDeviceQueue::NetDeviceQueue() [constructor]
     cls.add_constructor([])
-    ## net-device-queue-interface.h (module 'network'): ns3::Ptr<ns3::QueueLimits> ns3::NetDeviceQueue::GetQueueLimits() [member function]
-    cls.add_method('GetQueueLimits', 
-                   'ns3::Ptr< ns3::QueueLimits >', 
-                   [])
+    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueue::Start() [member function]
+    cls.add_method('Start', 
+                   'void', 
+                   [], 
+                   is_virtual=True)
+    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueue::Stop() [member function]
+    cls.add_method('Stop', 
+                   'void', 
+                   [], 
+                   is_virtual=True)
+    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueue::Wake() [member function]
+    cls.add_method('Wake', 
+                   'void', 
+                   [], 
+                   is_virtual=True)
     ## net-device-queue-interface.h (module 'network'): bool ns3::NetDeviceQueue::IsStopped() const [member function]
     cls.add_method('IsStopped', 
                    'bool', 
                    [], 
                    is_const=True)
+    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueue::NotifyAggregatedObject(ns3::Ptr<ns3::NetDeviceQueueInterface> ndqi) [member function]
+    cls.add_method('NotifyAggregatedObject', 
+                   'void', 
+                   [param('ns3::Ptr< ns3::NetDeviceQueueInterface >', 'ndqi')])
+    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueue::SetWakeCallback(ns3::NetDeviceQueue::WakeCallback cb) [member function]
+    cls.add_method('SetWakeCallback', 
+                   'void', 
+                   [param('ns3::Callback< void, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >', 'cb')], 
+                   is_virtual=True)
     ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueue::NotifyQueuedBytes(uint32_t bytes) [member function]
     cls.add_method('NotifyQueuedBytes', 
                    'void', 
@@ -8489,26 +8425,12 @@ def register_Ns3NetDeviceQueue_methods(root_module, cls):
     cls.add_method('SetQueueLimits', 
                    'void', 
                    [param('ns3::Ptr< ns3::QueueLimits >', 'ql')])
-    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueue::SetWakeCallback(ns3::NetDeviceQueue::WakeCallback cb) [member function]
-    cls.add_method('SetWakeCallback', 
-                   'void', 
-                   [param('ns3::Callback< void, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >', 'cb')], 
-                   is_virtual=True)
-    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueue::Start() [member function]
-    cls.add_method('Start', 
-                   'void', 
-                   [], 
-                   is_virtual=True)
-    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueue::Stop() [member function]
-    cls.add_method('Stop', 
-                   'void', 
-                   [], 
-                   is_virtual=True)
-    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueue::Wake() [member function]
-    cls.add_method('Wake', 
-                   'void', 
-                   [], 
-                   is_virtual=True)
+    ## net-device-queue-interface.h (module 'network'): ns3::Ptr<ns3::QueueLimits> ns3::NetDeviceQueue::GetQueueLimits() [member function]
+    cls.add_method('GetQueueLimits', 
+                   'ns3::Ptr< ns3::QueueLimits >', 
+                   [])
+    ## net-device-queue-interface.h (module 'network'): ns3::NetDeviceQueue::NetDeviceQueue(ns3::NetDeviceQueue const & arg0) [constructor]
+    cls.add_constructor([param('ns3::NetDeviceQueue const &', 'arg0')])
     return
 
 def register_Ns3NetDeviceQueueInterface_methods(root_module, cls):
@@ -8516,18 +8438,9 @@ def register_Ns3NetDeviceQueueInterface_methods(root_module, cls):
     cls.add_constructor([param('ns3::NetDeviceQueueInterface const &', 'arg0')])
     ## net-device-queue-interface.h (module 'network'): ns3::NetDeviceQueueInterface::NetDeviceQueueInterface() [constructor]
     cls.add_constructor([])
-    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueueInterface::CreateTxQueues() [member function]
-    cls.add_method('CreateTxQueues', 
-                   'void', 
-                   [])
-    ## net-device-queue-interface.h (module 'network'): bool ns3::NetDeviceQueueInterface::GetLateTxQueuesCreation() const [member function]
-    cls.add_method('GetLateTxQueuesCreation', 
-                   'bool', 
-                   [], 
-                   is_const=True)
-    ## net-device-queue-interface.h (module 'network'): uint8_t ns3::NetDeviceQueueInterface::GetNTxQueues() const [member function]
+    ## net-device-queue-interface.h (module 'network'): std::size_t ns3::NetDeviceQueueInterface::GetNTxQueues() const [member function]
     cls.add_method('GetNTxQueues', 
-                   'uint8_t', 
+                   'std::size_t', 
                    [], 
                    is_const=True)
     ## net-device-queue-interface.h (module 'network'): ns3::NetDeviceQueueInterface::SelectQueueCallback ns3::NetDeviceQueueInterface::GetSelectQueueCallback() const [member function]
@@ -8535,30 +8448,31 @@ def register_Ns3NetDeviceQueueInterface_methods(root_module, cls):
                    'ns3::NetDeviceQueueInterface::SelectQueueCallback', 
                    [], 
                    is_const=True)
-    ## net-device-queue-interface.h (module 'network'): ns3::Ptr<ns3::NetDeviceQueue> ns3::NetDeviceQueueInterface::GetTxQueue(uint8_t i) const [member function]
+    ## net-device-queue-interface.h (module 'network'): ns3::Ptr<ns3::NetDeviceQueue> ns3::NetDeviceQueueInterface::GetTxQueue(std::size_t i) const [member function]
     cls.add_method('GetTxQueue', 
                    'ns3::Ptr< ns3::NetDeviceQueue >', 
-                   [param('uint8_t', 'i')], 
+                   [param('std::size_t', 'i')], 
                    is_const=True)
     ## net-device-queue-interface.h (module 'network'): static ns3::TypeId ns3::NetDeviceQueueInterface::GetTypeId() [member function]
     cls.add_method('GetTypeId', 
                    'ns3::TypeId', 
                    [], 
                    is_static=True)
-    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueueInterface::SetLateTxQueuesCreation(bool value) [member function]
-    cls.add_method('SetLateTxQueuesCreation', 
+    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueueInterface::SetNTxQueues(std::size_t numTxQueues) [member function]
+    cls.add_method('SetNTxQueues', 
                    'void', 
-                   [param('bool', 'value')])
+                   [param('std::size_t', 'numTxQueues')])
     ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueueInterface::SetSelectQueueCallback(ns3::NetDeviceQueueInterface::SelectQueueCallback cb) [member function]
     cls.add_method('SetSelectQueueCallback', 
                    'void', 
-                   [param('ns3::Callback< unsigned char, ns3::Ptr< ns3::QueueItem >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >', 'cb')])
-    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueueInterface::SetTxQueuesN(uint8_t numTxQueues) [member function]
-    cls.add_method('SetTxQueuesN', 
-                   'void', 
-                   [param('uint8_t', 'numTxQueues')])
+                   [param('std::function< unsigned long long ( ns3::Ptr< ns3::QueueItem > ) >', 'cb')])
     ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueueInterface::DoDispose() [member function]
     cls.add_method('DoDispose', 
+                   'void', 
+                   [], 
+                   visibility='protected', is_virtual=True)
+    ## net-device-queue-interface.h (module 'network'): void ns3::NetDeviceQueueInterface::NotifyNewAggregate() [member function]
+    cls.add_method('NotifyNewAggregate', 
                    'void', 
                    [], 
                    visibility='protected', is_virtual=True)
@@ -10315,7 +10229,7 @@ def register_Ns3Queue__Ns3Packet_methods(root_module, cls):
     cls.add_method('Flush', 
                    'void', 
                    [])
-    ## net-device-queue-interface.h (module 'network'): ns3::Queue<ns3::Packet>::Queue(ns3::Queue<ns3::Packet> const & arg0) [constructor]
+    ## queue.h (module 'network'): ns3::Queue<ns3::Packet>::Queue(ns3::Queue<ns3::Packet> const & arg0) [constructor]
     cls.add_constructor([param('ns3::Queue< ns3::Packet > const &', 'arg0')])
     ## queue.h (module 'network'): ns3::Queue<ns3::Packet>::ConstIterator ns3::Queue<ns3::Packet>::Head() const [member function]
     cls.add_method('Head', 
@@ -10391,7 +10305,7 @@ def register_Ns3Queue__Ns3QueueDiscItem_methods(root_module, cls):
     cls.add_method('Flush', 
                    'void', 
                    [])
-    ## net-device-queue-interface.h (module 'network'): ns3::Queue<ns3::QueueDiscItem>::Queue(ns3::Queue<ns3::QueueDiscItem> const & arg0) [constructor]
+    ## queue.h (module 'network'): ns3::Queue<ns3::QueueDiscItem>::Queue(ns3::Queue<ns3::QueueDiscItem> const & arg0) [constructor]
     cls.add_constructor([param('ns3::Queue< ns3::QueueDiscItem > const &', 'arg0')])
     ## queue.h (module 'network'): ns3::Queue<ns3::QueueDiscItem>::ConstIterator ns3::Queue<ns3::QueueDiscItem>::Head() const [member function]
     cls.add_method('Head', 
@@ -10793,16 +10707,6 @@ def register_Ns3SimpleNetDevice_methods(root_module, cls):
                    'void', 
                    [], 
                    visibility='protected', is_virtual=True)
-    ## simple-net-device.h (module 'network'): void ns3::SimpleNetDevice::DoInitialize() [member function]
-    cls.add_method('DoInitialize', 
-                   'void', 
-                   [], 
-                   visibility='protected', is_virtual=True)
-    ## simple-net-device.h (module 'network'): void ns3::SimpleNetDevice::NotifyNewAggregate() [member function]
-    cls.add_method('NotifyNewAggregate', 
-                   'void', 
-                   [], 
-                   visibility='protected', is_virtual=True)
     return
 
 def register_Ns3TimeValue_methods(root_module, cls):
@@ -11104,28 +11008,6 @@ def register_Ns3CallbackImpl__Ns3ObjectBase___star___Ns3Empty_Ns3Empty_Ns3Empty_
                    is_pure_virtual=True, is_virtual=True, custom_name=u'__call__')
     return
 
-def register_Ns3CallbackImpl__Unsigned_char_Ns3Ptr__lt__ns3QueueItem__gt___Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, cls):
-    ## callback.h (module 'core'): ns3::CallbackImpl<unsigned char, ns3::Ptr<ns3::QueueItem>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty>::CallbackImpl() [constructor]
-    cls.add_constructor([])
-    ## callback.h (module 'core'): ns3::CallbackImpl<unsigned char, ns3::Ptr<ns3::QueueItem>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty>::CallbackImpl(ns3::CallbackImpl<unsigned char, ns3::Ptr<ns3::QueueItem>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty> const & arg0) [constructor]
-    cls.add_constructor([param('ns3::CallbackImpl< unsigned char, ns3::Ptr< ns3::QueueItem >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty > const &', 'arg0')])
-    ## callback.h (module 'core'): static std::string ns3::CallbackImpl<unsigned char, ns3::Ptr<ns3::QueueItem>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty>::DoGetTypeid() [member function]
-    cls.add_method('DoGetTypeid', 
-                   'std::string', 
-                   [], 
-                   is_static=True)
-    ## callback.h (module 'core'): std::string ns3::CallbackImpl<unsigned char, ns3::Ptr<ns3::QueueItem>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty>::GetTypeid() const [member function]
-    cls.add_method('GetTypeid', 
-                   'std::string', 
-                   [], 
-                   is_const=True, is_virtual=True)
-    ## callback.h (module 'core'): unsigned char ns3::CallbackImpl<unsigned char, ns3::Ptr<ns3::QueueItem>, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty>::operator()(ns3::Ptr<ns3::QueueItem> arg0) [member operator]
-    cls.add_method('operator()', 
-                   'unsigned char', 
-                   [param('ns3::Ptr< ns3::QueueItem >', 'arg0')], 
-                   is_pure_virtual=True, is_virtual=True, custom_name=u'__call__')
-    return
-
 def register_Ns3CallbackImpl__Void_Ns3Ptr__lt__const_ns3Packet__gt___Const_ns3Address___amp___Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_Ns3Empty_methods(root_module, cls):
     ## callback.h (module 'core'): ns3::CallbackImpl<void, ns3::Ptr<const ns3::Packet>, const ns3::Address &, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty>::CallbackImpl() [constructor]
     cls.add_constructor([])
@@ -11379,6 +11261,70 @@ def register_Ns3CounterCalculator__Unsigned_int_methods(root_module, cls):
                    'void', 
                    [], 
                    visibility='protected', is_virtual=True)
+    return
+
+def register_Ns3DropTailQueue__Ns3Packet_methods(root_module, cls):
+    ## drop-tail-queue.h (module 'network'): static ns3::TypeId ns3::DropTailQueue<ns3::Packet>::GetTypeId() [member function]
+    cls.add_method('GetTypeId', 
+                   'ns3::TypeId', 
+                   [], 
+                   is_static=True)
+    ## drop-tail-queue.h (module 'network'): ns3::DropTailQueue<ns3::Packet>::DropTailQueue() [constructor]
+    cls.add_constructor([])
+    ## drop-tail-queue.h (module 'network'): bool ns3::DropTailQueue<ns3::Packet>::Enqueue(ns3::Ptr<ns3::Packet> item) [member function]
+    cls.add_method('Enqueue', 
+                   'bool', 
+                   [param('ns3::Ptr< ns3::Packet >', 'item')], 
+                   is_virtual=True)
+    ## drop-tail-queue.h (module 'network'): ns3::Ptr<ns3::Packet> ns3::DropTailQueue<ns3::Packet>::Dequeue() [member function]
+    cls.add_method('Dequeue', 
+                   'ns3::Ptr< ns3::Packet >', 
+                   [], 
+                   is_virtual=True)
+    ## drop-tail-queue.h (module 'network'): ns3::Ptr<ns3::Packet> ns3::DropTailQueue<ns3::Packet>::Remove() [member function]
+    cls.add_method('Remove', 
+                   'ns3::Ptr< ns3::Packet >', 
+                   [], 
+                   is_virtual=True)
+    ## drop-tail-queue.h (module 'network'): ns3::Ptr<const ns3::Packet> ns3::DropTailQueue<ns3::Packet>::Peek() const [member function]
+    cls.add_method('Peek', 
+                   'ns3::Ptr< ns3::Packet const >', 
+                   [], 
+                   is_const=True, is_virtual=True)
+    ## drop-tail-queue.h (module 'network'): ns3::DropTailQueue<ns3::Packet>::DropTailQueue(ns3::DropTailQueue<ns3::Packet> const & arg0) [constructor]
+    cls.add_constructor([param('ns3::DropTailQueue< ns3::Packet > const &', 'arg0')])
+    return
+
+def register_Ns3DropTailQueue__Ns3QueueDiscItem_methods(root_module, cls):
+    ## drop-tail-queue.h (module 'network'): static ns3::TypeId ns3::DropTailQueue<ns3::QueueDiscItem>::GetTypeId() [member function]
+    cls.add_method('GetTypeId', 
+                   'ns3::TypeId', 
+                   [], 
+                   is_static=True)
+    ## drop-tail-queue.h (module 'network'): ns3::DropTailQueue<ns3::QueueDiscItem>::DropTailQueue() [constructor]
+    cls.add_constructor([])
+    ## drop-tail-queue.h (module 'network'): bool ns3::DropTailQueue<ns3::QueueDiscItem>::Enqueue(ns3::Ptr<ns3::QueueDiscItem> item) [member function]
+    cls.add_method('Enqueue', 
+                   'bool', 
+                   [param('ns3::Ptr< ns3::QueueDiscItem >', 'item')], 
+                   is_virtual=True)
+    ## drop-tail-queue.h (module 'network'): ns3::Ptr<ns3::QueueDiscItem> ns3::DropTailQueue<ns3::QueueDiscItem>::Dequeue() [member function]
+    cls.add_method('Dequeue', 
+                   'ns3::Ptr< ns3::QueueDiscItem >', 
+                   [], 
+                   is_virtual=True)
+    ## drop-tail-queue.h (module 'network'): ns3::Ptr<ns3::QueueDiscItem> ns3::DropTailQueue<ns3::QueueDiscItem>::Remove() [member function]
+    cls.add_method('Remove', 
+                   'ns3::Ptr< ns3::QueueDiscItem >', 
+                   [], 
+                   is_virtual=True)
+    ## drop-tail-queue.h (module 'network'): ns3::Ptr<const ns3::QueueDiscItem> ns3::DropTailQueue<ns3::QueueDiscItem>::Peek() const [member function]
+    cls.add_method('Peek', 
+                   'ns3::Ptr< ns3::QueueDiscItem const >', 
+                   [], 
+                   is_const=True, is_virtual=True)
+    ## drop-tail-queue.h (module 'network'): ns3::DropTailQueue<ns3::QueueDiscItem>::DropTailQueue(ns3::DropTailQueue<ns3::QueueDiscItem> const & arg0) [constructor]
+    cls.add_constructor([param('ns3::DropTailQueue< ns3::QueueDiscItem > const &', 'arg0')])
     return
 
 def register_Ns3ErrorChannel_methods(root_module, cls):

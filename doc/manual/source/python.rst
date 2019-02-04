@@ -291,7 +291,7 @@ Installing other prerequisites
 
 ``cxxfilt`` is a new requirement, typically installed using ``pip``; e.g.
 
-::
+.. sourcecode:: bash
 
     sudo pip install cxxfilt
 
@@ -300,7 +300,9 @@ See also the wiki for installation notes for your system.
 Set up a ``bake`` build environment
 ###################################
 
-Try the following commands::
+Try the following commands:
+
+.. sourcecode:: bash
 
     $ cd bake
     $ export BAKE_HOME=`pwd`
@@ -312,16 +314,22 @@ Try the following commands::
 Configure
 #########
 
-Perform a configuration at the bake level::
+Perform a configuration at the bake level:
+
+.. sourcecode:: bash
 
     $ ./bake.py configure -e ns-3-dev -e pygccxml-1.9.1
 
 The output of ``bake show`` should show something like this: 
-::
+
+
+.. sourcecode:: bash
 
     $ ./bake.py show
 
-Should say::
+Should say:
+
+.. sourcecode:: text
 
     -- System Dependencies --
      > clang-dev - OK
@@ -333,11 +341,12 @@ Should say::
      > qt - OK
      > setuptools - OK
 
-
 Download
 ########
 
-Try the following command::
+Try the following command:
+
+.. sourcecode:: bash
 
     $ ./bake.py download
      >> Searching for system dependency python-dev - OK
@@ -357,7 +366,9 @@ Try the following command::
 Build
 #####
 
-Try the following commands::
+Try the following commands:
+
+.. sourcecode:: bash
 
     $ mkdir -p build/lib
     $ ./bake.py build
@@ -367,13 +378,13 @@ It should fail on the |ns3| bindings complilation.
 The output of './waf configure' can be inspected to see if Python API scanning
 support is enabled:
 
-::
+.. sourcecode:: text
 
   Python API Scanning Support   : enabled
 
 It may say something like this, if the support is not active:
 
-::
+.. sourcecode:: text
 
   Python API Scanning Support   : not enabled (Missing 'pygccxml' Python module)
 
@@ -403,14 +414,14 @@ Rescanning a module
 
 To re-scan a module:
 
-::
+.. sourcecode:: bash
 
     $ cd source/ns-3-dev
     $ ./waf --apiscan=wifi
 
 To re-scan all modules:
 
-::
+.. sourcecode:: bash
 
     $ cd source/ns-3-dev
     $ ./waf --apiscan=all

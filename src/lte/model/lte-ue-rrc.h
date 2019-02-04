@@ -486,9 +486,9 @@ private:
 
   /**
    * RRC CCM SAP USER Method
-   * \param res
+   * \param noOfComponentCarriers the number of component carriers
    */
-  void DoComponentCarrierEnabling (std::vector<uint8_t> res);
+  void DoSetNumberOfComponentCarriers (uint16_t noOfComponentCarriers);
 
  
   // INTERNAL METHODS

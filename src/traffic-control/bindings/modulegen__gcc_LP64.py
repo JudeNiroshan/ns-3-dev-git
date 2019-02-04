@@ -231,6 +231,9 @@ def register_types(module):
     module.add_enum('WakeMode', ['WAKE_ROOT', 'WAKE_CHILD'], outer_class=root_module['ns3::QueueDisc'])
     ## queue-disc.h (module 'traffic-control'): ns3::QueueDisc::Stats [struct]
     module.add_class('Stats', outer_class=root_module['ns3::QueueDisc'])
+    typehandlers.add_type_alias(u'std::function< void ( ns3::Ptr< ns3::QueueDiscItem > ) >', u'ns3::QueueDisc::SendCallback')
+    typehandlers.add_type_alias(u'std::function< void ( ns3::Ptr< ns3::QueueDiscItem > ) >*', u'ns3::QueueDisc::SendCallback*')
+    typehandlers.add_type_alias(u'std::function< void ( ns3::Ptr< ns3::QueueDiscItem > ) >&', u'ns3::QueueDisc::SendCallback&')
     typehandlers.add_type_alias(u'ns3::Queue< ns3::QueueDiscItem >', u'ns3::QueueDisc::InternalQueue')
     typehandlers.add_type_alias(u'ns3::Queue< ns3::QueueDiscItem >*', u'ns3::QueueDisc::InternalQueue*')
     typehandlers.add_type_alias(u'ns3::Queue< ns3::QueueDiscItem >&', u'ns3::QueueDisc::InternalQueue&')
@@ -272,6 +275,9 @@ def register_types(module):
     module.add_class('Time', import_from_module='ns.core')
     ## nstime.h (module 'core'): ns3::Time::Unit [enumeration]
     module.add_enum('Unit', ['Y', 'D', 'H', 'MIN', 'S', 'MS', 'US', 'NS', 'PS', 'FS', 'LAST'], outer_class=root_module['ns3::Time'], import_from_module='ns.core')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )', u'ns3::Time::TracedCallback')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )*', u'ns3::Time::TracedCallback*')
+    typehandlers.add_type_alias(u'void ( * ) ( ns3::Time )&', u'ns3::Time::TracedCallback&')
     ## nstime.h (module 'core'): ns3::Time [class]
     root_module['ns3::Time'].implicitly_converts_to(root_module['ns3::int64x64_t'])
     ## trace-source-accessor.h (module 'core'): ns3::TraceSourceAccessor [class]
@@ -281,9 +287,6 @@ def register_types(module):
     typehandlers.add_type_alias(u'std::vector< ns3::Ptr< ns3::QueueDisc > >', u'ns3::TrafficControlLayer::QueueDiscVector')
     typehandlers.add_type_alias(u'std::vector< ns3::Ptr< ns3::QueueDisc > >*', u'ns3::TrafficControlLayer::QueueDiscVector*')
     typehandlers.add_type_alias(u'std::vector< ns3::Ptr< ns3::QueueDisc > >&', u'ns3::TrafficControlLayer::QueueDiscVector&')
-    typehandlers.add_type_alias(u'ns3::Callback< unsigned char, ns3::Ptr< ns3::QueueItem >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >', u'ns3::TrafficControlLayer::SelectQueueCallback')
-    typehandlers.add_type_alias(u'ns3::Callback< unsigned char, ns3::Ptr< ns3::QueueItem >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >*', u'ns3::TrafficControlLayer::SelectQueueCallback*')
-    typehandlers.add_type_alias(u'ns3::Callback< unsigned char, ns3::Ptr< ns3::QueueItem >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >&', u'ns3::TrafficControlLayer::SelectQueueCallback&')
     ## trailer.h (module 'network'): ns3::Trailer [class]
     module.add_class('Trailer', import_from_module='ns.network', parent=root_module['ns3::Chunk'])
     ## random-variable-stream.h (module 'core'): ns3::TriangularRandomVariable [class]
@@ -2560,6 +2563,11 @@ def register_Ns3Simulator_methods(root_module, cls):
                    'ns3::Time', 
                    [param('ns3::EventId const &', 'id')], 
                    is_static=True)
+    ## simulator.h (module 'core'): static uint64_t ns3::Simulator::GetEventCount() [member function]
+    cls.add_method('GetEventCount', 
+                   'uint64_t', 
+                   [], 
+                   is_static=True)
     ## simulator.h (module 'core'): static ns3::Ptr<ns3::SimulatorImpl> ns3::Simulator::GetImplementation() [member function]
     cls.add_method('GetImplementation', 
                    'ns3::Ptr< ns3::SimulatorImpl >', 
@@ -3153,6 +3161,7 @@ def register_Ns3Empty_methods(root_module, cls):
     return
 
 def register_Ns3Int64x64_t_methods(root_module, cls):
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::int64x64_t'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('+', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::int64x64_t'], root_module['ns3::int64x64_t'], param('ns3::int64x64_t const &', u'right'))
@@ -3447,9 +3456,9 @@ def register_Ns3QueueDisc_methods(root_module, cls):
                    'std::size_t', 
                    [], 
                    is_const=True)
-    ## queue-disc.h (module 'traffic-control'): ns3::Ptr<ns3::NetDevice> ns3::QueueDisc::GetNetDevice() const [member function]
-    cls.add_method('GetNetDevice', 
-                   'ns3::Ptr< ns3::NetDevice >', 
+    ## queue-disc.h (module 'traffic-control'): ns3::Ptr<ns3::NetDeviceQueueInterface> ns3::QueueDisc::GetNetDeviceQueueInterface() const [member function]
+    cls.add_method('GetNetDeviceQueueInterface', 
+                   'ns3::Ptr< ns3::NetDeviceQueueInterface >', 
                    [], 
                    is_const=True)
     ## queue-disc.h (module 'traffic-control'): ns3::Ptr<ns3::PacketFilter> ns3::QueueDisc::GetPacketFilter(std::size_t i) const [member function]
@@ -3467,6 +3476,11 @@ def register_Ns3QueueDisc_methods(root_module, cls):
                    'uint32_t', 
                    [], 
                    is_const=True, is_virtual=True)
+    ## queue-disc.h (module 'traffic-control'): ns3::QueueDisc::SendCallback ns3::QueueDisc::GetSendCallback() const [member function]
+    cls.add_method('GetSendCallback', 
+                   'ns3::QueueDisc::SendCallback', 
+                   [], 
+                   is_const=True)
     ## queue-disc.h (module 'traffic-control'): ns3::QueueDisc::Stats const & ns3::QueueDisc::GetStats() [member function]
     cls.add_method('GetStats', 
                    'ns3::QueueDisc::Stats const &', 
@@ -3493,15 +3507,19 @@ def register_Ns3QueueDisc_methods(root_module, cls):
     cls.add_method('SetMaxSize', 
                    'bool', 
                    [param('ns3::QueueSize', 'size')])
-    ## queue-disc.h (module 'traffic-control'): void ns3::QueueDisc::SetNetDevice(ns3::Ptr<ns3::NetDevice> device) [member function]
-    cls.add_method('SetNetDevice', 
+    ## queue-disc.h (module 'traffic-control'): void ns3::QueueDisc::SetNetDeviceQueueInterface(ns3::Ptr<ns3::NetDeviceQueueInterface> ndqi) [member function]
+    cls.add_method('SetNetDeviceQueueInterface', 
                    'void', 
-                   [param('ns3::Ptr< ns3::NetDevice >', 'device')])
+                   [param('ns3::Ptr< ns3::NetDeviceQueueInterface >', 'ndqi')])
     ## queue-disc.h (module 'traffic-control'): void ns3::QueueDisc::SetQuota(uint32_t const quota) [member function]
     cls.add_method('SetQuota', 
                    'void', 
                    [param('uint32_t const', 'quota')], 
                    is_virtual=True)
+    ## queue-disc.h (module 'traffic-control'): void ns3::QueueDisc::SetSendCallback(ns3::QueueDisc::SendCallback func) [member function]
+    cls.add_method('SetSendCallback', 
+                   'void', 
+                   [param('std::function< void ( ns3::Ptr< ns3::QueueDiscItem > ) >', 'func')])
     ## queue-disc.h (module 'traffic-control'): ns3::QueueDisc::CHILD_QUEUE_DISC_DROP [variable]
     cls.add_static_attribute('CHILD_QUEUE_DISC_DROP', 'char const * const', is_const=True)
     ## queue-disc.h (module 'traffic-control'): ns3::QueueDisc::INTERNAL_QUEUE_DROP [variable]
@@ -3997,7 +4015,10 @@ def register_Ns3Time_methods(root_module, cls):
     cls.add_binary_numeric_operator('+', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('-', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('*', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::int64x64_t'], root_module['ns3::Time'], param('ns3::Time const &', u'right'))
     cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('int64_t const &', u'right'))
+    cls.add_binary_numeric_operator('/', root_module['ns3::Time'], root_module['ns3::Time'], param('ns3::int64x64_t const &', u'right'))
     cls.add_inplace_numeric_operator('+=', param('ns3::Time const &', u'right'))
     cls.add_inplace_numeric_operator('-=', param('ns3::Time const &', u'right'))
     cls.add_output_stream_operator()
@@ -4244,6 +4265,11 @@ def register_Ns3TrafficControlLayer_methods(root_module, cls):
     cls.add_method('RegisterProtocolHandler', 
                    'void', 
                    [param('ns3::Callback< void, ns3::Ptr< ns3::NetDevice >, ns3::Ptr< ns3::Packet const >, unsigned short, ns3::Address const &, ns3::Address const &, ns3::NetDevice::PacketType, ns3::empty, ns3::empty, ns3::empty >', 'handler'), param('uint16_t', 'protocolType'), param('ns3::Ptr< ns3::NetDevice >', 'device')])
+    ## traffic-control-layer.h (module 'traffic-control'): void ns3::TrafficControlLayer::ScanDevices() [member function]
+    cls.add_method('ScanDevices', 
+                   'void', 
+                   [], 
+                   is_virtual=True)
     ## traffic-control-layer.h (module 'traffic-control'): void ns3::TrafficControlLayer::Send(ns3::Ptr<ns3::NetDevice> device, ns3::Ptr<ns3::QueueDiscItem> item) [member function]
     cls.add_method('Send', 
                    'void', 
@@ -4257,11 +4283,6 @@ def register_Ns3TrafficControlLayer_methods(root_module, cls):
     cls.add_method('SetRootQueueDiscOnDevice', 
                    'void', 
                    [param('ns3::Ptr< ns3::NetDevice >', 'device'), param('ns3::Ptr< ns3::QueueDisc >', 'qDisc')], 
-                   is_virtual=True)
-    ## traffic-control-layer.h (module 'traffic-control'): void ns3::TrafficControlLayer::SetupDevice(ns3::Ptr<ns3::NetDevice> device) [member function]
-    cls.add_method('SetupDevice', 
-                   'void', 
-                   [param('ns3::Ptr< ns3::NetDevice >', 'device')], 
                    is_virtual=True)
     ## traffic-control-layer.h (module 'traffic-control'): void ns3::TrafficControlLayer::DoDispose() [member function]
     cls.add_method('DoDispose', 
